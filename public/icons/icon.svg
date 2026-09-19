@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#0A0F1D" />
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded rect -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <rect width="504" height="504" x="4" y="4" rx="108" fill="none" stroke="url(#cyanGrad)" stroke-width="6" stroke-opacity="0.4" />
+
+  <!-- Academic Cap Base -->
+  <g transform="translate(48, 64)">
+    <!-- Shield / Foundation -->
+    <path d="M208 40 L376 112 L208 184 L40 112 Z" fill="url(#accentGrad)" filter="url(#glow)" />
+    <path d="M208 55 L350 112 L208 170 L66 112 Z" fill="#312E81" />
+
+    <!-- Cap Underbody -->
+    <path d="M104 148 L104 220 C104 276 312 276 312 220 L312 148 L208 192 Z" fill="url(#accentGrad)" opacity="0.9" />
+
+    <!-- Tassel -->
+    <path d="M344 122 L360 210 C360 226 350 240 338 240 C326 240 316 226 316 210 L332 122" fill="#22D3EE" stroke="#06B6D4" stroke-width="4" />
+    <circle cx="340" cy="120" r="10" fill="#22D3EE" />
+    <circle cx="338" cy="246" r="14" fill="#06B6D4" />
+
+    <!-- AI Sparkle Core (Center) -->
+    <g transform="translate(208, 290) scale(1.4)" filter="url(#glow)">
+      <!-- Central 4-point star -->
+      <path d="M0 -42 C0 -12 12 0 42 0 C12 0 0 12 0 42 C0 12 -12 0 -42 0 C-12 0 0 -12 0 -42 Z" fill="url(#cyanGrad)" />
+      <circle cx="0" cy="0" r="8" fill="#FFFFFF" />
+    </g>
+
+    <!-- Satellite AI Sparkle Small -->
+    <g transform="translate(310, 270) scale(0.6)">
+      <path d="M0 -30 C0 -8 8 0 30 0 C8 0 0 8 0 30 C0 8 -8 0 -30 0 C-8 0 0 -8 0 -30 Z" fill="#22D3EE" opacity="0.85" />
+    </g>
+    <g transform="translate(110, 310) scale(0.5)">
+      <path d="M0 -30 C0 -8 8 0 30 0 C8 0 0 8 0 30 C0 8 -8 0 -30 0 C-8 0 0 -8 0 -30 Z" fill="#818CF8" opacity="0.75" />
+    </g>
+  </g>
+
+  <!-- Brand Typography Arc / Base Label -->
+  <text x="256" y="450" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="40" font-weight="800" fill="#F8FAFC" letter-spacing="4">
+    CAMPUS<tspan fill="#22D3EE">SAATHI</tspan>
+  </text>
+</svg>

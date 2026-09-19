@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-indigo: #1e1b4b;
+  --color-brand-indigo-light: #312e81;
+  --color-brand-indigo-accent: #4338ca;
+  --color-brand-indigo-glow: #6366f1;
+  --color-brand-cyan: #06b6d4;
+  --color-brand-cyan-light: #22d3ee;
+  --color-brand-cyan-dark: #0891b2;
+  --color-brand-slate: #0a0f1d;
+  --color-brand-surface: #0f172a;
+  --color-brand-card: #1e293b;
+  --color-brand-card-hover: #273549;
+  --color-brand-border: #334155;
+  --color-brand-border-subtle: #1e293b;
+  --color-brand-emerald: #10b981;
+  --color-brand-amber: #f59e0b;
+  --color-brand-rose: #f43f5e;
+}
+
+:root {
+  --background: #0a0f1d;
+  --foreground: #f8fafc;
+}
+
+/* Custom scrollbars for clean mobile & desktop presentation */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0f1d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+html,
+body {
+  min-height: 100%;
+  width: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Safe area padding for mobile notches and bottom navigation */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+
+.pt-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+}
+
+.bottom-nav-safe {
+  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Glassmorphic card styling */
+.glass-panel {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+}
+
+.glass-nav {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(51, 65, 85, 0.7);
+}
