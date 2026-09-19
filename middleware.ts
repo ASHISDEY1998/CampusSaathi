@@ -59,6 +59,11 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
+
+    // Role-based protection: Only ADMIN can access /admin
+    if (pathname.startsWith("/admin") && userRole !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
   }
 
   return NextResponse.next();

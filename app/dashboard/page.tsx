@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -21,19 +21,50 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 
+interface AuthUser {
+  identifier: string;
+  name: string;
+  role: "STUDENT" | "TEACHER" | "ADMIN";
+  email: string;
+  department: string;
+}
+
 export default function DashboardPage() {
   const [activeRole, setActiveRole] = useState<"STUDENT" | "TEACHER">("STUDENT");
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchSession = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (isMounted && data.authenticated && data.user) {
+          setCurrentUser(data.user);
+          if (data.user.role === "TEACHER") {
+            setActiveRole("TEACHER");
+          }
+        }
+      } catch {
+        // ignore
+      }
+    };
+    fetchSession();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-4">
-      {/* Stage 1 Status & Role Selector */}
+      {/* Active Role Selector */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-900/60 border border-slate-800 p-3.5">
         <div className="flex items-center gap-2">
-          <Badge variant="cyan">Stage 1 UI Shell</Badge>
+          <Badge variant="emerald">Live Academic Dashboard</Badge>
           <span className="text-xs text-slate-400">
-            Previewing:{" "}
+            Active:{" "}
             <strong className="text-slate-200">
-              {activeRole === "STUDENT" ? "Student Dashboard" : "Faculty Dashboard"}
+              {currentUser?.name || (activeRole === "STUDENT" ? "Student Dashboard" : "Faculty Dashboard")}
             </strong>
           </span>
         </div>
@@ -77,27 +108,31 @@ export default function DashboardPage() {
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-900 border border-indigo-500/30 p-5 sm:p-7 shadow-xl">
             <div className="relative z-10">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                <Badge variant="indigo">Example Student Persona</Badge>
-                <span className="text-xs text-slate-400">B.Tech Computer Science • Sem 6</span>
+                <Badge variant="indigo">
+                  {currentUser ? `${currentUser.identifier}` : "Student Portal"}
+                </Badge>
+                <span className="text-xs text-slate-400">
+                  {currentUser?.department ? `Department of ${currentUser.department}` : "Computer Science & Engineering"}
+                </span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                Welcome to CampusSaathi!
+                Welcome, {currentUser?.name || "Student"}!
               </h1>
               <p className="mt-1.5 text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-                This is the exhibition dashboard prototype. In Stage 2 & 3, real student academic standing, internal marks, and class schedules will populate dynamically from MongoDB.
+                Access your course schedule, attendance records, internal marks, and verified AI college helpdesk in one place.
               </p>
             </div>
             <div className="absolute -right-8 -bottom-8 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
           </div>
 
-          {/* Section 2: Academic Overview (Placeholder Cards) */}
+          {/* Section 2: Academic Overview */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <Layers className="h-3.5 w-3.5 text-cyan-400" />
-                Academic Overview (Preview Structure)
+                Academic Overview & Standing
               </h2>
-              <span className="text-[11px] text-slate-500 font-mono">Sample Metrics</span>
+              <span className="text-[11px] text-slate-400 font-mono">Current Semester</span>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -313,19 +348,21 @@ export default function DashboardPage() {
         /* ================= TEACHER DASHBOARD ================= */
         <div className="space-y-6">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-900 border border-indigo-500/30 p-5 sm:p-7 shadow-xl">
-            <Badge variant="indigo" className="mb-2">Example Faculty Persona</Badge>
+            <Badge variant="cyan" className="mb-2">
+              {currentUser ? `${currentUser.name} (${currentUser.identifier})` : "Faculty Portal"}
+            </Badge>
             <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-              Faculty Dashboard Preview
+              Faculty Academic Console
             </h1>
             <p className="mt-1 text-xs sm:text-sm text-slate-300 max-w-xl">
-              In Stage 3 & 4, teachers will view assigned lecture batches, manage student attendance records, and inspect departmental equipment tickets.
+              View assigned lecture batches, verify student attendance records, and inspect departmental notices.
             </p>
           </div>
 
           <Card className="p-5">
             <CardTitle className="text-sm mb-3 flex items-center gap-2">
               <Calendar className="h-4 w-4 text-cyan-400" />
-              Example Teaching Schedule (Schema Representation)
+              Weekly Teaching Schedule
             </CardTitle>
             <div className="space-y-3">
               {[

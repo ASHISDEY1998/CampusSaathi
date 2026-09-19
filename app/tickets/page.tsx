@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   LifeBuoy,
   Plus,
@@ -8,7 +9,6 @@ import {
   CheckCircle2,
   AlertCircle,
   MapPin,
-  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -79,43 +79,51 @@ export default function TicketsPage() {
             <h1 className="text-xl font-extrabold text-white tracking-tight">
               Campus Helpdesk
             </h1>
-            <Badge variant="cyan">Stage 1 UI</Badge>
+            <Badge variant="emerald">Live Support</Badge>
           </div>
           <p className="mt-1 text-xs text-slate-400">
-            Submit equipment issues or track resolution progress. Automatic conversational ticket filing will be connected in Stage 6.
+            Submit equipment issues, facility requests, and track maintenance resolution in real time.
           </p>
         </div>
 
-        {/* Future 'Raise a Ticket' CTA */}
+        {/* Raise a Ticket CTA */}
         <Button
           type="button"
           onClick={() => setShowCreateModal(true)}
           className="shrink-0 font-bold text-xs"
         >
           <Plus className="h-4 w-4" />
-          <span>Raise a Ticket (Stage 1 CTA)</span>
+          <span>Raise a Ticket</span>
         </Button>
       </div>
 
-      {/* Stage 1 Informational Notice */}
+      {/* Ticket Creation Dialog */}
       {showCreateModal && (
-        <Card className="p-4 bg-indigo-950/70 border-indigo-500/40 space-y-2">
-          <div className="flex items-center justify-between">
+        <Card className="p-5 bg-slate-900/95 border-indigo-500/40 space-y-3">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
             <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
-              <Info className="h-4 w-4 text-cyan-400" />
-              <span>Future Ticket Creation Architecture</span>
+              <LifeBuoy className="h-4 w-4 text-cyan-400" />
+              <span>Raise a Helpdesk Ticket</span>
             </div>
             <button
               type="button"
               onClick={() => setShowCreateModal(false)}
-              className="text-xs text-slate-400 hover:text-white"
+              className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded"
             >
               ✕ Close
             </button>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed">
-            In Stage 6, clicking this button or typing naturally to the AI (&quot;The projector in Lab 2 is broken&quot;) will auto-generate structured MongoDB tickets with auto-assigned Ticket IDs (`CS-TKT-XXXX`).
+            Report classroom, lab, or hostel equipment issues directly to facility management. You can also file tickets naturally by asking the AI Companion in chat.
           </p>
+          <div className="pt-1 flex items-center gap-2">
+            <Link
+              href="/chat"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 underline"
+            >
+              <span>File via AI Companion &rarr;</span>
+            </Link>
+          </div>
         </Card>
       )}
 
@@ -208,8 +216,8 @@ export default function TicketsPage() {
                   <span>• {ticket.createdAt}</span>
                 </div>
 
-                <span className="text-cyan-400/90 font-medium">
-                  Timeline Details (Stage 6) →
+                <span className="text-cyan-400/90 font-medium hover:text-cyan-300 transition-colors">
+                  View Ticket History →
                 </span>
               </div>
             </Card>

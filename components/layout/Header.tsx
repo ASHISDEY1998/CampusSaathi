@@ -89,15 +89,17 @@ export default function Header() {
 
         {/* Right Side Status & User Session Controls */}
         <div className="flex items-center gap-2.5">
-          {/* Admin Portal Shortcut */}
-          <Link
-            href="/admin"
-            className="flex items-center gap-1.5 rounded-full bg-indigo-950/80 hover:bg-indigo-900/90 border border-indigo-500/40 px-2.5 py-1 text-[11px] font-semibold text-cyan-300 transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
-            aria-label="Admin Portal"
-          >
-            <Shield className="h-3 w-3 text-cyan-400" />
-            <span>Admin</span>
-          </Link>
+          {/* Admin Portal Shortcut - Only visible to administrators */}
+          {currentUser?.role === "ADMIN" && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 rounded-full bg-indigo-950/80 hover:bg-indigo-900/90 border border-indigo-500/40 px-2.5 py-1 text-[11px] font-semibold text-cyan-300 transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
+              aria-label="Admin Portal"
+            >
+              <Shield className="h-3 w-3 text-cyan-400" />
+              <span>Admin</span>
+            </Link>
+          )}
 
           {/* AI Status Indicator */}
           <div className="flex items-center gap-1.5 rounded-full bg-slate-900/90 px-2.5 py-1 text-[11px] font-medium text-slate-300 border border-slate-800 shadow-sm">
