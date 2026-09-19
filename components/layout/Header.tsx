@@ -1,12 +1,59 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { GraduationCap, Sparkles, User, Shield } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  GraduationCap,
+  Sparkles,
+  User,
+  Shield,
+  LogOut,
+} from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+
+interface AuthUser {
+  identifier: string;
+  name: string;
+  role: "STUDENT" | "TEACHER" | "ADMIN";
+  email: string;
+  department: string;
+}
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (isMounted && data.authenticated && data.user) {
+          setCurrentUser(data.user);
+        }
+      } catch {
+        // ignore
+      }
+    };
+    checkAuth();
+    return () => {
+      isMounted = false;
+    };
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setCurrentUser(null);
+      router.push("/login");
+      router.refresh();
+    } catch {
+      router.push("/login");
+    }
+  };
 
   // Hide header on login page
   if (pathname === "/login") {
@@ -18,7 +65,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <Link
-          href="/dashboard"
+          href={currentUser?.role === "ADMIN" ? "/admin" : "/dashboard"}
           className="flex items-center gap-2.5 transition-opacity hover:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-xl"
           aria-label="CampusSaathi Home"
         >
@@ -40,7 +87,7 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Right Side Status & Role Indicators */}
+        {/* Right Side Status & User Session Controls */}
         <div className="flex items-center gap-2.5">
           {/* Admin Portal Shortcut */}
           <Link
@@ -59,11 +106,53 @@ export default function Header() {
             <span className="text-emerald-400 font-semibold">Ready</span>
           </div>
 
-          {/* Role Placeholder (Generic preview badge, no hardcoded personal name) */}
-          <Badge variant="indigo" className="hidden sm:inline-flex py-1 px-2.5">
-            <User className="h-3 w-3 mr-1" />
-            Demo User
-          </Badge>
+          {/* Authenticated User Badge */}
+          {currentUser ? (
+            <div className="hidden sm:flex items-center gap-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 py-1 pl-2.5 pr-1.5 text-xs text-slate-200">
+              <Badge
+                variant={
+                  currentUser.role === "ADMIN"
+                    ? "amber"
+                    : currentUser.role === "TEACHER"
+                    ? "cyan"
+                    : "indigo"
+                }
+                className="text-[10px] py-0 px-1.5"
+              >
+                {currentUser.role}
+              </Badge>
+              <span className="font-semibold text-slate-100 max-w-[120px] truncate">
+                {currentUser.name}
+              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="ml-1 p-1 rounded-full text-slate-400 hover:text-rose-400 hover:bg-rose-950/50 transition-colors"
+                title="Sign Out"
+                aria-label="Sign Out"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <Badge variant="indigo" className="hidden sm:inline-flex py-1 px-2.5">
+              <User className="h-3 w-3 mr-1" />
+              Demo User
+            </Badge>
+          )}
+
+          {/* Mobile Logout / Chat Shortcut */}
+          {currentUser && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex sm:hidden min-h-[38px] min-w-[38px] items-center justify-center rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-400 active:scale-95"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          )}
 
           {/* Quick Chat Shortcut for Mobile */}
           <Link

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   GraduationCap,
   Sparkles,
@@ -11,24 +11,80 @@ import {
   EyeOff,
   ArrowRight,
   Shield,
-  Info,
+  AlertCircle,
+  CheckCircle2,
+  KeyRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
-export default function LoginPage() {
-  const [role, setRole] = useState<"STUDENT" | "TEACHER">("STUDENT");
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  const [role, setRole] = useState<"STUDENT" | "TEACHER" | "ADMIN">("STUDENT");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [submittedMessage, setSubmittedMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const fillCredentials = (
+    selectedRole: "STUDENT" | "TEACHER" | "ADMIN",
+    id: string,
+    pass: string
+  ) => {
+    setRole(selectedRole);
+    setIdentifier(id);
+    setPassword(pass);
+    setErrorMessage(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Do not fake authentication. Inform user of Stage 1 status.
-    setSubmittedMessage(
-      "Stage 1 UI Preview: Real JWT authentication and bcrypt verification will be connected in Stage 3."
-    );
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!identifier.trim() || !password) {
+      setErrorMessage("Please enter both ID and password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: identifier.trim(),
+          password,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSuccessMessage(`Signed in as ${data.user.name}. Redirecting...`);
+
+        // Redirect based on role or callbackUrl
+        const destination =
+          callbackUrl ||
+          (data.user.role === "ADMIN" ? "/admin" : "/dashboard");
+
+        setTimeout(() => {
+          router.push(destination);
+          router.refresh();
+        }, 600);
+      } else {
+        setErrorMessage(data.error || "Authentication failed. Please try again.");
+      }
+    } catch (err: unknown) {
+      const error = err as Error;
+      setErrorMessage(error.message || "Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,23 +105,27 @@ export default function LoginPage() {
       {/* Login Card */}
       <Card className="p-6 sm:p-8">
         {/* Role Toggle */}
-        <div className="flex rounded-xl bg-slate-900/90 p-1 border border-slate-800 mb-6" role="tablist" aria-label="Login Role Selection">
+        <div
+          className="flex rounded-xl bg-slate-900/90 p-1 border border-slate-800 mb-5"
+          role="tablist"
+          aria-label="Login Role Selection"
+        >
           <button
             type="button"
             role="tab"
             aria-selected={role === "STUDENT"}
             onClick={() => {
               setRole("STUDENT");
-              setSubmittedMessage(null);
+              setErrorMessage(null);
             }}
-            className={`flex-1 min-h-[44px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+            className={`flex-1 min-h-[40px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
               role === "STUDENT"
                 ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <GraduationCap className="h-4 w-4" />
-            Student Login
+            <GraduationCap className="h-3.5 w-3.5" />
+            Student
           </button>
           <button
             type="button"
@@ -73,31 +133,74 @@ export default function LoginPage() {
             aria-selected={role === "TEACHER"}
             onClick={() => {
               setRole("TEACHER");
-              setSubmittedMessage(null);
+              setErrorMessage(null);
             }}
-            className={`flex-1 min-h-[44px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+            className={`flex-1 min-h-[40px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
               role === "TEACHER"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
+                ? "bg-cyan-600 text-white shadow-md shadow-cyan-600/30"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <User className="h-4 w-4" />
-            Teacher Login
+            <User className="h-3.5 w-3.5" />
+            Teacher
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={role === "ADMIN"}
+            onClick={() => {
+              setRole("ADMIN");
+              setErrorMessage(null);
+            }}
+            className={`flex-1 min-h-[40px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+              role === "ADMIN"
+                ? "bg-amber-600 text-white shadow-md shadow-amber-600/30"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Shield className="h-3.5 w-3.5" />
+            Admin
           </button>
         </div>
 
-        {/* Future Demo Login Information Box */}
-        <div className="mb-6 rounded-xl bg-slate-900/60 border border-slate-800/80 p-3.5">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 mb-1">
-            <Sparkles className="h-3.5 w-3.5" />
-            Stage 1 Architecture Preview
+        {/* Quick Demo Autofill Bar */}
+        <div className="mb-5 rounded-xl bg-slate-900/50 border border-slate-800/80 p-2.5">
+          <div className="flex items-center justify-between text-[11px] mb-2 px-1">
+            <span className="text-slate-400 flex items-center gap-1">
+              <Sparkles className="h-3 w-3 text-cyan-400" />
+              1-Tap Demo Credentials:
+            </span>
           </div>
-          <p className="text-[11px] text-slate-400 leading-relaxed">
-            Role-based authentication via MongoDB and stateless JWT cookies will be activated in Stage 3. For Stage 1 UI review, you can inspect this interface or proceed to the dashboard.
-          </p>
+          <div className="grid grid-cols-3 gap-1.5">
+            <button
+              type="button"
+              onClick={() => fillCredentials("ADMIN", "admin", "admin")}
+              className="py-1 px-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[10px] font-semibold text-amber-300 transition-colors text-center"
+            >
+              👑 Admin (admin)
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                fillCredentials("STUDENT", "STU2024CSE001", "DemoPass@2024")
+              }
+              className="py-1 px-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[10px] font-semibold text-indigo-300 transition-colors text-center"
+            >
+              🎓 Student
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                fillCredentials("TEACHER", "EMP1001", "FacultyPass@2024")
+              }
+              className="py-1 px-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[10px] font-semibold text-cyan-300 transition-colors text-center"
+            >
+              👨‍🏫 Teacher
+            </button>
+          </div>
         </div>
 
-        {/* Form Placeholder */}
+        {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Identifier Input */}
           <div>
@@ -105,11 +208,19 @@ export default function LoginPage() {
               htmlFor="identifier"
               className="block text-xs font-semibold text-slate-300 mb-1.5"
             >
-              {role === "STUDENT" ? "Student ID / Roll No." : "Employee ID"}
+              {role === "STUDENT"
+                ? "Student ID / Roll No."
+                : role === "TEACHER"
+                ? "Employee ID"
+                : "Administrator ID"}
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
-                <User className="h-4 w-4" />
+                {role === "ADMIN" ? (
+                  <KeyRound className="h-4 w-4" />
+                ) : (
+                  <User className="h-4 w-4" />
+                )}
               </div>
               <input
                 id="identifier"
@@ -117,9 +228,13 @@ export default function LoginPage() {
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder={
-                  role === "STUDENT" ? "e.g. STU2024CSE012" : "e.g. EMP1024"
+                  role === "STUDENT"
+                    ? "e.g. STU2024CSE001"
+                    : role === "TEACHER"
+                    ? "e.g. EMP1001"
+                    : "e.g. admin"
                 }
-                className="w-full min-h-[44px] rounded-xl bg-slate-900/90 border border-slate-700/80 pl-9 pr-3 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-colors"
+                className="w-full min-h-[44px] rounded-xl bg-slate-900/90 border border-slate-700/80 pl-9 pr-3 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-colors font-mono"
                 required
               />
             </div>
@@ -143,7 +258,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full min-h-[44px] rounded-xl bg-slate-900/90 border border-slate-700/80 pl-9 pr-11 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-colors"
+                className="w-full min-h-[44px] rounded-xl bg-slate-900/90 border border-slate-700/80 pl-9 pr-11 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-colors font-mono"
                 required
               />
               <button
@@ -161,11 +276,19 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Feedback message on submit (No fake authentication) */}
-          {submittedMessage && (
-            <div className="rounded-xl bg-indigo-950/70 border border-indigo-500/40 p-3 text-xs text-cyan-300 flex items-start gap-2">
-              <Info className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-              <span>{submittedMessage}</span>
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="rounded-xl bg-rose-950/70 border border-rose-500/40 p-3 text-xs text-rose-300 flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Success Message */}
+          {successMessage && (
+            <div className="rounded-xl bg-emerald-950/70 border border-emerald-500/40 p-3 text-xs text-emerald-300 flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <span>{successMessage}</span>
             </div>
           )}
 
@@ -173,8 +296,9 @@ export default function LoginPage() {
           <Button
             type="submit"
             className="w-full min-h-[48px] font-bold text-sm"
+            disabled={loading}
           >
-            <span>Sign In (Stage 1 Preview)</span>
+            <span>{loading ? "Verifying Credentials..." : "Sign In to CampusSaathi"}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </form>
@@ -182,20 +306,23 @@ export default function LoginPage() {
         {/* Security / Architecture Footer */}
         <div className="mt-6 flex items-center justify-center gap-2 text-center text-xs text-slate-500">
           <Shield className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-          <span>Stage 3 RBAC • No plaintext credentials</span>
+          <span>MongoDB Atlas Bcrypt & Stateless JWT Session</span>
         </div>
       </Card>
-
-      {/* Direct link to explore dashboard */}
-      <div className="mt-6 text-center">
-        <Link
-          href="/dashboard"
-          className="text-xs text-cyan-400/90 hover:text-cyan-300 transition-colors inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg"
-        >
-          <span>Continue to Dashboard Preview</span>
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="py-12 text-center text-xs text-slate-400">
+          Loading CampusSaathi Portal...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
