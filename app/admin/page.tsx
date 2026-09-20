@@ -196,14 +196,14 @@ export default function AdminPage() {
     if (role === "STUDENT") {
       const id = `STU2024${department}${randomSuffix}`;
       setIdentifier(id);
-      if (!email || email.includes("@abctech.edu.in")) {
-        setEmail(`${id.toLowerCase()}@abctech.edu.in`);
+      if (!email || email.includes("@pgi.edu.in") || email.includes("@abctech.edu.in")) {
+        setEmail(`${id.toLowerCase()}@pgi.edu.in`);
       }
     } else {
       const id = `EMP${randomSuffix}`;
       setIdentifier(id);
-      if (!email || email.includes("@abctech.edu.in")) {
-        setEmail(`${id.toLowerCase()}@abctech.edu.in`);
+      if (!email || email.includes("@pgi.edu.in") || email.includes("@abctech.edu.in")) {
+        setEmail(`${id.toLowerCase()}@pgi.edu.in`);
       }
     }
   };
@@ -577,7 +577,7 @@ export default function AdminPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. rohan.sharma@abctech.edu.in"
+                  placeholder="e.g. rohan.sharma@pgi.edu.in"
                   className="w-full min-h-[42px] rounded-xl bg-slate-950/80 border border-slate-700/80 px-3 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 transition-colors"
                 />
               </div>

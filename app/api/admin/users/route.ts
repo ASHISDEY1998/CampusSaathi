@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
     const cleanDept = (department || "CSE").trim().toUpperCase();
     const cleanEmail =
       (email && email.trim()) ||
-      `${cleanIdentifier.toLowerCase()}@abctech.edu.in`;
+      `${cleanIdentifier.toLowerCase()}@pgi.edu.in`;
 
     const usersCol = await getUsersCollection();
     const studentsCol = await getStudentsCollection();

@@ -1,7 +1,7 @@
 # General Rules, Regulations & Code of Conduct for Students
 
 ## Document Metadata
-- **Institution:** Mary Matha Arts & Science College / ABC College of Higher Learning
+- **Institution:** Purnachandra Group of Institutions
 - **Document Title:** Student Handbook: General Rules, Code of Conduct, Attendance & Uniform Regulations
 - **Effective Version:** 2024–2026
 - **Target Audience:** All Undergraduate and Higher Secondary Students, Parents, Faculty, Administrative Staff

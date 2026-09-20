@@ -105,8 +105,8 @@ export default function DesktopNav() {
             <Building2 className="h-3.5 w-3.5 text-sky-500" />
             Institution Portal
           </div>
-          <p className="mt-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
-            ABC Institute of Technology
+          <p className="mt-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate" title="Purnachandra Group of Institutions">
+            Purnachandra Group of Institutions
           </p>
           <div className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
             Official Campus Portal

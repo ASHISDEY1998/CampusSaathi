@@ -211,7 +211,7 @@ export async function POST(request: NextRequest) {
           )}\n--- END OF CONTEXT ---\n`
         : "\n(No specific database documents matched. Provide general institutional advice or invite them to check specific circulars).\n";
 
-    const systemPrompt = `You are "CampusSaathi", the official AI College Companion for ABC Institute of Technology.
+    const systemPrompt = `You are "CampusSaathi", the official AI Campus Companion for Purnachandra Group of Institutions.
 Your mission is to assist students and faculty with verified academic, administrative, and campus information.
 
 User Persona: You are conversing with ${userRole}.
