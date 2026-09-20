@@ -16,9 +16,12 @@ import {
   Clock,
   Sparkles,
   AlertCircle,
+  AlertTriangle,
   Eye,
   EyeOff,
   X,
+  Edit2,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -33,8 +36,12 @@ interface UserRecord {
   department: string;
   createdAt: string;
   profile?: {
+    studentId?: string;
+    employeeId?: string;
     year?: number;
     semester?: number;
+    cgpa?: number;
+    phone?: string;
     designation?: string;
     cabinLocation?: string;
   };
@@ -110,6 +117,26 @@ export default function AdminPage() {
   const [resettingPassword, setResettingPassword] = useState(false);
   const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
   const [resetErrorMessage, setResetErrorMessage] = useState<string | null>(null);
+
+  // Edit User State
+  const [editingUser, setEditingUser] = useState<UserRecord | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editDepartment, setEditDepartment] = useState("CSE");
+  const [editYear, setEditYear] = useState(1);
+  const [editSemester, setEditSemester] = useState(1);
+  const [editCgpa, setEditCgpa] = useState<number | string>(0.0);
+  const [editPhone, setEditPhone] = useState("");
+  const [editDesignation, setEditDesignation] = useState("Assistant Professor");
+  const [editCabinLocation, setEditCabinLocation] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editSuccessMessage, setEditSuccessMessage] = useState<string | null>(null);
+  const [editErrorMessage, setEditErrorMessage] = useState<string | null>(null);
+
+  // Delete User State
+  const [deletingUser, setDeletingUser] = useState<UserRecord | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
 
   // Fetch sync status
   const fetchSyncStatus = useCallback(async () => {
@@ -333,6 +360,88 @@ export default function AdminPage() {
       setResetErrorMessage("Network error. Please try again.");
     } finally {
       setResettingPassword(false);
+    }
+  };
+
+  // Open Edit Modal
+  const handleOpenEdit = (u: UserRecord) => {
+    setEditingUser(u);
+    setEditName(u.name);
+    setEditEmail(u.email || "");
+    setEditDepartment(u.department || "CSE");
+    setEditYear(u.profile?.year || 1);
+    setEditSemester(u.profile?.semester || 1);
+    setEditCgpa(u.profile?.cgpa !== undefined ? u.profile.cgpa : 0.0);
+    setEditPhone(u.profile?.phone || "");
+    setEditDesignation(u.profile?.designation || "Assistant Professor");
+    setEditCabinLocation(u.profile?.cabinLocation || "");
+    setEditSuccessMessage(null);
+    setEditErrorMessage(null);
+  };
+
+  // Save Edit Details
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setSavingEdit(true);
+    setEditErrorMessage(null);
+    setEditSuccessMessage(null);
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: editingUser.identifier,
+          name: editName.trim(),
+          email: editEmail.trim(),
+          department: editDepartment.trim(),
+          year: editYear,
+          semester: editSemester,
+          cgpa: Number(editCgpa) || 0.0,
+          phone: editPhone.trim(),
+          designation: editDesignation.trim(),
+          cabinLocation: editCabinLocation.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setEditSuccessMessage(`Account details updated successfully!`);
+        fetchUsers();
+      } else {
+        setEditErrorMessage(data.error || "Failed to update account details.");
+      }
+    } catch {
+      setEditErrorMessage("Network error occurred.");
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  // Confirm Delete User
+  const handleConfirmDelete = async () => {
+    if (!deletingUser) return;
+    setIsDeleting(true);
+    setDeleteErrorMessage(null);
+
+    try {
+      const res = await fetch(
+        `/api/admin/users?identifier=${encodeURIComponent(deletingUser.identifier)}`,
+        { method: "DELETE" }
+      );
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setDeletingUser(null);
+        fetchUsers();
+      } else {
+        setDeleteErrorMessage(data.error || "Failed to delete account.");
+      }
+    } catch {
+      setDeleteErrorMessage("Network error occurred.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -979,21 +1088,51 @@ export default function AdminPage() {
                         </td>
 
                         <td className="py-3 px-4 text-right">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setResetUser(u);
-                              setNewResetPassword("");
-                              setShowResetPassword(false);
-                              setResetSuccessMessage(null);
-                              setResetErrorMessage(null);
-                            }}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-zinc-800 hover:bg-zinc-700 text-sky-400 hover:text-sky-300 border border-zinc-700/80 transition-colors shadow-xs"
-                            title={`Reset password for ${u.name}`}
-                          >
-                            <KeyRound className="h-3 w-3 text-sky-400" />
-                            <span>Reset Password</span>
-                          </button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            {/* Edit Details */}
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEdit(u)}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-zinc-800 hover:bg-zinc-700 text-sky-400 hover:text-sky-300 border border-zinc-700/80 transition-colors shadow-xs"
+                              title={`Edit all details for ${u.name}`}
+                            >
+                              <Edit2 className="h-3 w-3" />
+                              <span>Edit</span>
+                            </button>
+
+                            {/* Reset Password */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setResetUser(u);
+                                setNewResetPassword("");
+                                setShowResetPassword(false);
+                                setResetSuccessMessage(null);
+                                setResetErrorMessage(null);
+                              }}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-zinc-800 hover:bg-zinc-700 text-amber-400 hover:text-amber-300 border border-zinc-700/80 transition-colors shadow-xs"
+                              title={`Reset password for ${u.name}`}
+                            >
+                              <KeyRound className="h-3 w-3" />
+                              <span>Password</span>
+                            </button>
+
+                            {/* Delete Account */}
+                            {u.role !== "ADMIN" && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setDeletingUser(u);
+                                  setDeleteErrorMessage(null);
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-zinc-800 hover:bg-rose-950/60 text-zinc-400 hover:text-rose-400 border border-zinc-700/80 hover:border-rose-800/80 transition-colors shadow-xs"
+                                title={`Delete account for ${u.name}`}
+                              >
+                                <Trash2 className="h-3 w-3 text-rose-400" />
+                                <span>Delete</span>
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -1191,6 +1330,327 @@ export default function AdminPage() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* 6. Edit User Details Modal Dialog */}
+      {editingUser && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto"
+        >
+          <div className="relative w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl space-y-4 my-8">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                  <Edit2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-bold text-white">
+                      Edit User Details
+                    </h3>
+                    <Badge variant={editingUser.role === "STUDENT" ? "indigo" : "cyan"} className="text-[10px]">
+                      {editingUser.role}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-zinc-400 font-mono">
+                    ID: {editingUser.identifier}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingUser(null)}
+                className="rounded-lg p-1.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Edit Form */}
+            <form onSubmit={handleSaveEdit} className="space-y-4 text-xs">
+              {/* Row 1: Full Name & Email */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-semibold text-zinc-300 mb-1">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    required
+                    className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white placeholder-zinc-500 focus:border-sky-400 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-zinc-300 mb-1">
+                    Institutional Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    required
+                    className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white placeholder-zinc-500 focus:border-sky-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Department */}
+              <div>
+                <label className="block font-semibold text-zinc-300 mb-1">
+                  Department
+                </label>
+                <select
+                  value={editDepartment}
+                  onChange={(e) => setEditDepartment(e.target.value)}
+                  className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white focus:border-sky-400 focus:outline-none"
+                >
+                  {DEPARTMENTS.map((d) => (
+                    <option key={d.code} value={d.code}>
+                      {d.code} — {d.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Role-Specific Fields */}
+              {editingUser.role === "STUDENT" && (
+                <div className="space-y-3.5 pt-1 border-t border-zinc-800">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block font-semibold text-zinc-300 mb-1">
+                        Year of Study
+                      </label>
+                      <select
+                        value={editYear}
+                        onChange={(e) => setEditYear(Number(e.target.value))}
+                        className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white focus:border-sky-400 focus:outline-none"
+                      >
+                        <option value={1}>1st Year</option>
+                        <option value={2}>2nd Year</option>
+                        <option value={3}>3rd Year</option>
+                        <option value={4}>4th Year</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-zinc-300 mb-1">
+                        Current Semester
+                      </label>
+                      <select
+                        value={editSemester}
+                        onChange={(e) => setEditSemester(Number(e.target.value))}
+                        className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white focus:border-sky-400 focus:outline-none"
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                          <option key={s} value={s}>
+                            Semester {s}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block font-semibold text-zinc-300 mb-1">
+                        Cumulative CGPA
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="10"
+                        value={editCgpa}
+                        onChange={(e) => setEditCgpa(e.target.value)}
+                        className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white focus:border-sky-400 focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-zinc-300 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="text"
+                        value={editPhone}
+                        onChange={(e) => setEditPhone(e.target.value)}
+                        placeholder="e.g. +91 9876543210"
+                        className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white placeholder-zinc-500 focus:border-sky-400 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {editingUser.role === "TEACHER" && (
+                <div className="space-y-3.5 pt-1 border-t border-zinc-800">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block font-semibold text-zinc-300 mb-1">
+                        Designation
+                      </label>
+                      <select
+                        value={editDesignation}
+                        onChange={(e) => setEditDesignation(e.target.value)}
+                        className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white focus:border-sky-400 focus:outline-none"
+                      >
+                        <option value="Assistant Professor">Assistant Professor</option>
+                        <option value="Associate Professor">Associate Professor</option>
+                        <option value="Professor">Professor</option>
+                        <option value="Head of Department (HOD)">Head of Department (HOD)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-zinc-300 mb-1">
+                        Cabin / Office Location
+                      </label>
+                      <input
+                        type="text"
+                        value={editCabinLocation}
+                        onChange={(e) => setEditCabinLocation(e.target.value)}
+                        placeholder="e.g. Academic Block A, Room 302"
+                        className="w-full min-h-[38px] rounded-xl bg-zinc-900 border border-zinc-700 px-3 text-sm text-white placeholder-zinc-500 focus:border-sky-400 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Feedback messages */}
+              {editSuccessMessage && (
+                <div className="rounded-xl bg-emerald-950/40 border border-emerald-500/30 p-3 text-emerald-400 flex items-center gap-2">
+                  <Check className="h-4 w-4 shrink-0" />
+                  <span>{editSuccessMessage}</span>
+                </div>
+              )}
+
+              {editErrorMessage && (
+                <div className="rounded-xl bg-rose-950/40 border border-rose-500/30 p-3 text-rose-400 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{editErrorMessage}</span>
+                </div>
+              )}
+
+              {/* Buttons */}
+              <div className="flex items-center gap-3 pt-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setEditingUser(null)}
+                  disabled={savingEdit}
+                >
+                  Close
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="flex-1"
+                  disabled={savingEdit}
+                >
+                  {savingEdit ? (
+                    <>
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                      <span>Saving Changes...</span>
+                    </>
+                  ) : (
+                    <span>Save Changes</span>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Delete User Confirmation Modal Dialog */}
+      {deletingUser && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs"
+        >
+          <div className="relative w-full max-w-md rounded-2xl border border-rose-500/30 bg-zinc-950 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white">
+                  Delete User Account?
+                </h3>
+                <p className="text-xs text-rose-400">
+                  Permanent MongoDB cascade deletion
+                </p>
+              </div>
+            </div>
+
+            {/* Target Account Summary */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-3.5 text-xs space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">User Name:</span>
+                <strong className="text-white">{deletingUser.name}</strong>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">Identifier:</span>
+                <span className="font-mono font-bold text-sky-400">{deletingUser.identifier}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">Role & Dept:</span>
+                <span className="text-zinc-300">{deletingUser.role} • {deletingUser.department}</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Are you sure you want to delete this account? This will permanently erase the user and their associated profile records from MongoDB. This action cannot be undone.
+            </p>
+
+            {deleteErrorMessage && (
+              <div className="rounded-xl bg-rose-950/40 border border-rose-500/30 p-3 text-xs text-rose-400 flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>{deleteErrorMessage}</span>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 pt-1">
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex-1"
+                onClick={() => setDeletingUser(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                className="flex-1 font-bold bg-rose-600 hover:bg-rose-700 text-white"
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <span>Delete Permanently</span>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       )}

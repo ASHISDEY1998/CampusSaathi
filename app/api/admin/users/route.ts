@@ -325,3 +325,206 @@ export async function PATCH(request: NextRequest) {
     );
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const {
+      identifier,
+      name,
+      email,
+      department,
+      // student fields
+      year,
+      semester,
+      cgpa,
+      phone,
+      // teacher fields
+      designation,
+      cabinLocation,
+    } = body;
+
+    if (!identifier || typeof identifier !== "string") {
+      return NextResponse.json(
+        { success: false, error: "User identifier is required." },
+        { status: 400 }
+      );
+    }
+
+    const cleanIdentifier = identifier.trim();
+    const usersCol = await getUsersCollection();
+    const studentsCol = await getStudentsCollection();
+    const teachersCol = await getTeachersCollection();
+
+    const user = await usersCol.findOne({
+      identifier: { $regex: new RegExp(`^${cleanIdentifier}$`, "i") },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: `Account with ID "${cleanIdentifier}" not found.` },
+        { status: 404 }
+      );
+    }
+
+    // 1. Update basic user details
+    const userUpdateFields: Record<string, unknown> = {
+      updatedAt: new Date(),
+    };
+    if (name && typeof name === "string" && name.trim().length > 0) {
+      userUpdateFields.name = name.trim();
+    }
+    if (email && typeof email === "string" && email.trim().length > 0) {
+      userUpdateFields.email = email.trim();
+    }
+    if (department && typeof department === "string" && department.trim().length > 0) {
+      userUpdateFields.department = department.trim().toUpperCase();
+    }
+
+    await usersCol.updateOne({ _id: user._id }, { $set: userUpdateFields });
+
+    // 2. Update role-specific collections
+    if (user.role === "STUDENT") {
+      const studentUpdateFields: Record<string, unknown> = {};
+      if (department) studentUpdateFields.department = department.trim().toUpperCase();
+      if (year !== undefined) studentUpdateFields.year = Number(year) || 1;
+      if (semester !== undefined) studentUpdateFields.semester = Number(semester) || 1;
+      if (cgpa !== undefined) studentUpdateFields.cgpa = Number(cgpa) || 0.0;
+      if (phone !== undefined) studentUpdateFields.phone = String(phone).trim();
+
+      await studentsCol.updateOne(
+        { userId: user._id },
+        { $set: studentUpdateFields },
+        { upsert: false }
+      );
+    } else if (user.role === "TEACHER") {
+      const teacherUpdateFields: Record<string, unknown> = {};
+      if (department) teacherUpdateFields.department = department.trim().toUpperCase();
+      if (designation && typeof designation === "string") {
+        teacherUpdateFields.designation = designation.trim();
+      }
+      if (cabinLocation && typeof cabinLocation === "string") {
+        teacherUpdateFields.cabinLocation = cabinLocation.trim();
+      }
+
+      await teachersCol.updateOne(
+        { userId: user._id },
+        { $set: teacherUpdateFields },
+        { upsert: false }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Account details for ${name || user.name} (${user.identifier}) updated successfully.`,
+      user: {
+        identifier: user.identifier,
+        name: name || user.name,
+        email: email || user.email,
+        department: department || user.department,
+        role: user.role,
+      },
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error("Update user error:", err);
+    return NextResponse.json(
+      { success: false, error: err.message || "Failed to update user details." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const identifier = searchParams.get("identifier");
+
+    if (!identifier || typeof identifier !== "string") {
+      return NextResponse.json(
+        { success: false, error: "User identifier is required in query parameter." },
+        { status: 400 }
+      );
+    }
+
+    const cleanIdentifier = identifier.trim();
+
+    // Prevent deleting superadmin "admin"
+    if (
+      cleanIdentifier.toLowerCase() === "admin" ||
+      session.identifier.toLowerCase() === cleanIdentifier.toLowerCase()
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Root administrator account cannot be deleted." },
+        { status: 400 }
+      );
+    }
+
+    const usersCol = await getUsersCollection();
+    const studentsCol = await getStudentsCollection();
+    const teachersCol = await getTeachersCollection();
+
+    const user = await usersCol.findOne({
+      identifier: { $regex: new RegExp(`^${cleanIdentifier}$`, "i") },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: `Account with ID "${cleanIdentifier}" not found.` },
+        { status: 404 }
+      );
+    }
+
+    // Cascade delete from role-specific collection
+    if (user.role === "STUDENT") {
+      await studentsCol.deleteOne({ userId: user._id });
+    } else if (user.role === "TEACHER") {
+      await teachersCol.deleteOne({ userId: user._id });
+    }
+
+    // Delete from users collection
+    await usersCol.deleteOne({ _id: user._id });
+
+    return NextResponse.json({
+      success: true,
+      message: `Account ${user.name} (${user.identifier}) and all associated records have been permanently deleted from MongoDB.`,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error("Delete user error:", err);
+    return NextResponse.json(
+      { success: false, error: err.message || "Failed to delete user." },
+      { status: 500 }
+    );
+  }
+}
