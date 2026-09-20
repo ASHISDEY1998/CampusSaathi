@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -32,12 +33,8 @@ interface UserRecord {
   department: string;
   createdAt: string;
   profile?: {
-    studentId?: string;
-    employeeId?: string;
     year?: number;
     semester?: number;
-    cgpa?: number;
-    phone?: string;
     designation?: string;
     cabinLocation?: string;
   };
@@ -50,6 +47,16 @@ interface SyncStatus {
   isSynced: boolean;
 }
 
+interface SyncResult {
+  success: boolean;
+  message: string;
+  filesCount?: number;
+  chunksCount?: number;
+  embeddingsGenerated?: number;
+  files?: { name: string; category: string; chunks: number }[];
+  syncedAt?: string;
+}
+
 const DEPARTMENTS = [
   { code: "CSE", name: "Computer Science & Engineering" },
   { code: "ECE", name: "Electronics & Communication Engineering" },
@@ -59,16 +66,9 @@ const DEPARTMENTS = [
 ];
 
 export default function AdminPage() {
-  // Sync KB State
+  // Knowledge Base Sync State
   const [syncing, setSyncing] = useState(false);
-  const [syncResult, setSyncResult] = useState<{
-    success: boolean;
-    message: string;
-    filesCount?: number;
-    chunksCount?: number;
-    embeddingsGenerated?: number;
-    files?: { name: string; category: string; chunks: number }[];
-  } | null>(null);
+  const [syncResult, setSyncResult] = useState<SyncResult | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatus | null>(null);
 
   // User Creator State
@@ -102,6 +102,14 @@ export default function AdminPage() {
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Password Reset State
+  const [resetUser, setResetUser] = useState<UserRecord | null>(null);
+  const [newResetPassword, setNewResetPassword] = useState("");
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resettingPassword, setResettingPassword] = useState(false);
+  const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
+  const [resetErrorMessage, setResetErrorMessage] = useState<string | null>(null);
 
   // Fetch sync status
   const fetchSyncStatus = useCallback(async () => {
@@ -280,6 +288,52 @@ export default function AdminPage() {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2500);
+  };
+
+  // Helper to generate a friendly secure reset password
+  const handleGenerateResetPassword = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let rand = "";
+    for (let i = 0; i < 4; i++) {
+      rand += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const prefix = resetUser?.role === "STUDENT" ? "Student" : resetUser?.role === "TEACHER" ? "Faculty" : "Admin";
+    const generated = `${prefix}@${rand}`;
+    setNewResetPassword(generated);
+  };
+
+  // Handle Reset Password Submit
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetUser || !newResetPassword.trim()) {
+      setResetErrorMessage("Please enter or generate a new password.");
+      return;
+    }
+    setResettingPassword(true);
+    setResetErrorMessage(null);
+    setResetSuccessMessage(null);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: resetUser.identifier,
+          newPassword: newResetPassword.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResetSuccessMessage(
+          `Password for ${resetUser.name} (${resetUser.identifier}) was successfully updated.`
+        );
+      } else {
+        setResetErrorMessage(data.error || "Failed to update password.");
+      }
+    } catch {
+      setResetErrorMessage("Network error. Please try again.");
+    } finally {
+      setResettingPassword(false);
+    }
   };
 
   // Filtered users
@@ -850,6 +904,7 @@ export default function AdminPage() {
                     <th className="py-3 px-4">Department</th>
                     <th className="py-3 px-4">Details</th>
                     <th className="py-3 px-4">Created Date</th>
+                    <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
@@ -922,6 +977,24 @@ export default function AdminPage() {
                             })}
                           </span>
                         </td>
+
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setResetUser(u);
+                              setNewResetPassword("");
+                              setShowResetPassword(false);
+                              setResetSuccessMessage(null);
+                              setResetErrorMessage(null);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-zinc-800 hover:bg-zinc-700 text-sky-400 hover:text-sky-300 border border-zinc-700/80 transition-colors shadow-xs"
+                            title={`Reset password for ${u.name}`}
+                          >
+                            <KeyRound className="h-3 w-3 text-sky-400" />
+                            <span>Reset Password</span>
+                          </button>
+                        </td>
                       </tr>
                     );
                   })}
@@ -931,6 +1004,196 @@ export default function AdminPage() {
           )}
         </Card>
       </div>
+
+      {/* 5. Password Reset Modal Dialog */}
+      {resetUser && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs"
+        >
+          <div className="relative w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl space-y-5">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                  <KeyRound className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    Reset User Password
+                  </h3>
+                  <p className="text-xs text-zinc-400">
+                    Update credentials directly in MongoDB
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setResetUser(null);
+                  setResetSuccessMessage(null);
+                  setResetErrorMessage(null);
+                }}
+                className="rounded-lg p-1.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Target User Info Summary */}
+            <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-3.5 text-xs space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">Target Account:</span>
+                <span className="font-semibold text-white">{resetUser.name}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">Identifier / Roll No:</span>
+                <span className="font-mono font-bold text-sky-400">{resetUser.identifier}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">Role & Department:</span>
+                <span className="text-zinc-300">
+                  {resetUser.role} • {resetUser.department}
+                </span>
+              </div>
+            </div>
+
+            {/* Password Form or Success View */}
+            {resetSuccessMessage ? (
+              <div className="space-y-4">
+                <div className="rounded-xl bg-emerald-950/40 border border-emerald-500/30 p-4 text-xs text-emerald-300 space-y-3">
+                  <div className="flex items-center gap-2 font-bold text-emerald-400">
+                    <Check className="h-4 w-4 shrink-0" />
+                    <span>Password Updated Successfully!</span>
+                  </div>
+                  <p className="text-zinc-300">
+                    The user can now log into CampusSaathi using their identifier and the new password below:
+                  </p>
+                  <div className="rounded-lg bg-zinc-900 border border-zinc-800 p-3 font-mono text-xs flex items-center justify-between">
+                    <div>
+                      <span className="text-zinc-500 block text-[10px] font-sans">New Password:</span>
+                      <strong className="text-sky-400 text-sm">{newResetPassword}</strong>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      className="py-1 px-2.5 h-auto text-[11px]"
+                      onClick={() =>
+                        copyToClipboard(
+                          `Identifier: ${resetUser.identifier}\nPassword: ${newResetPassword}`,
+                          "reset-creds"
+                        )
+                      }
+                    >
+                      {copiedKey === "reset-creds" ? (
+                        <>
+                          <Check className="h-3 w-3 text-emerald-400" />
+                          <span>Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3 w-3" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="w-full"
+                  onClick={() => {
+                    setResetUser(null);
+                    setResetSuccessMessage(null);
+                  }}
+                >
+                  Done
+                </Button>
+              </div>
+            ) : (
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label htmlFor="reset-new-password" className="text-xs font-semibold text-zinc-300">
+                      New Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleGenerateResetPassword}
+                      className="text-[11px] text-sky-400 hover:text-sky-300 underline font-medium flex items-center gap-1"
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      Generate Strong
+                    </button>
+                  </div>
+
+                  <div className="relative">
+                    <input
+                      id="reset-new-password"
+                      type={showResetPassword ? "text" : "password"}
+                      value={newResetPassword}
+                      onChange={(e) => setNewResetPassword(e.target.value)}
+                      placeholder="Enter new password (min 3 chars)"
+                      className="w-full min-h-[42px] rounded-xl bg-zinc-900 border border-zinc-700 pl-3 pr-10 text-sm text-white placeholder-zinc-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20 font-mono transition-colors"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowResetPassword(!showResetPassword)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400 hover:text-zinc-200"
+                      aria-label={showResetPassword ? "Hide password" : "Show password"}
+                    >
+                      {showResetPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {resetErrorMessage && (
+                  <div className="rounded-xl bg-rose-950/40 border border-rose-500/30 p-3 text-xs text-rose-400 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    <span>{resetErrorMessage}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3 pt-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="flex-1"
+                    onClick={() => {
+                      setResetUser(null);
+                      setResetErrorMessage(null);
+                    }}
+                    disabled={resettingPassword}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="flex-1"
+                    disabled={resettingPassword || !newResetPassword.trim()}
+                  >
+                    {resettingPassword ? (
+                      <>
+                        <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                        <span>Updating...</span>
+                      </>
+                    ) : (
+                      <span>Update Password</span>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

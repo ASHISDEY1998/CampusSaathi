@@ -251,3 +251,77 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const { identifier, newPassword } = body;
+
+    if (!identifier || typeof identifier !== "string") {
+      return NextResponse.json(
+        { success: false, error: "User identifier is required." },
+        { status: 400 }
+      );
+    }
+
+    if (!newPassword || typeof newPassword !== "string" || newPassword.length < 3) {
+      return NextResponse.json(
+        { success: false, error: "New password must be at least 3 characters." },
+        { status: 400 }
+      );
+    }
+
+    const cleanIdentifier = identifier.trim();
+    const usersCol = await getUsersCollection();
+
+    const user = await usersCol.findOne({
+      identifier: { $regex: new RegExp(`^${cleanIdentifier}$`, "i") },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: `Account with ID "${cleanIdentifier}" not found.` },
+        { status: 404 }
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    await usersCol.updateOne(
+      { _id: user._id },
+      { $set: { passwordHash, updatedAt: new Date() } }
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: `Password for ${user.name} (${user.identifier}) has been successfully updated.`,
+      user: {
+        identifier: user.identifier,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error("Update password error:", err);
+    return NextResponse.json(
+      { success: false, error: err.message || "Failed to update password." },
+      { status: 500 }
+    );
+  }
+}
