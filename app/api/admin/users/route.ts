@@ -7,9 +7,25 @@ import {
   getTeachersCollection,
 } from "@/lib/db/collections";
 import { UserRole } from "@/types";
+import { verifyAuthToken, AUTH_COOKIE_NAME } from "@/lib/auth/jwt";
 
 export async function GET(request: NextRequest) {
   try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const roleParam = searchParams.get("role")?.toUpperCase();
 
@@ -83,6 +99,21 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const {
       role,

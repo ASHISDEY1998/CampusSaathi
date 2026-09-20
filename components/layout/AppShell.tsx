@@ -16,14 +16,14 @@ export default function AppShell({ children }: AppShellProps) {
 
   if (isAuthPage) {
     return (
-      <main className="min-h-screen w-full flex flex-col justify-center items-center bg-[#0a0f1d] px-4 py-8">
+      <main className="min-h-screen w-full flex flex-col justify-center items-center bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 px-4 py-8 transition-colors duration-200">
         {children}
       </main>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1d] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-sky-500/20 selection:text-sky-500 transition-colors duration-200">
       {/* Top Header */}
       <Header />
 

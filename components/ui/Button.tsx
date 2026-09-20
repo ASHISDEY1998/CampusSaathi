@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "sky";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
 }
@@ -24,19 +24,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-semibold transition-all select-none disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.98]";
+      "inline-flex items-center justify-center font-medium transition-all select-none disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-black active:scale-[0.98]";
 
     const variantStyles = {
       primary:
-        "bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white shadow-lg shadow-indigo-950/50 border border-cyan-400/20",
+        "bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 shadow-sm border border-transparent",
       secondary:
-        "bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700",
+        "bg-zinc-100 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700/80",
       outline:
-        "border border-slate-700 hover:border-cyan-500/50 bg-transparent text-slate-200 hover:bg-slate-900/60 hover:text-cyan-300",
+        "border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 bg-transparent text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900",
       ghost:
-        "bg-transparent text-slate-300 hover:bg-slate-800/60 hover:text-white",
+        "bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100",
+      sky:
+        "bg-sky-500 hover:bg-sky-600 text-white shadow-sm shadow-sky-500/20 border border-sky-400/20",
       danger:
-        "bg-rose-600/90 hover:bg-rose-500 text-white shadow-md shadow-rose-950/40 border border-rose-500/30",
+        "bg-rose-600 hover:bg-rose-500 text-white shadow-sm border border-transparent",
     };
 
     const sizeStyles = {

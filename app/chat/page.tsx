@@ -12,7 +12,6 @@ import {
   Copy,
   Check,
 } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
 
 interface Citation {
   title: string;
@@ -139,21 +138,16 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] md:h-[calc(100vh-5.5rem)] max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-cyan-400 text-white shadow-md shadow-cyan-500/20">
-            <Sparkles className="h-5 w-5" />
+      <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800/80 mb-3 shrink-0">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
+            <Sparkles className="h-4.5 w-4.5 text-sky-500" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-sm sm:text-base font-bold text-white">
-                CampusSaathi AI Companion
-              </h1>
-              <Badge variant="emerald" className="text-[10px] py-0.5">
-                Gemini 3.6 Active
-              </Badge>
-            </div>
-            <p className="text-[11px] text-slate-400">
+            <h1 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-white">
+              Campus AI Companion
+            </h1>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
               Grounded in verified institutional policies & database records
             </p>
           </div>
@@ -163,7 +157,7 @@ export default function ChatPage() {
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-xl border border-slate-800 hover:bg-slate-900 transition-colors min-h-[38px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="flex items-center gap-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors min-h-[38px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">New Chat</span>
@@ -177,22 +171,22 @@ export default function ChatPage() {
           /* Empty State */
           <div className="h-full flex flex-col justify-center items-center text-center p-4">
             <div className="max-w-md space-y-4">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 border border-indigo-500/40 text-cyan-400 shadow-xl shadow-indigo-950/60">
-                <Bot className="h-8 w-8" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sky-500 shadow-xs">
+                <Bot className="h-7 w-7" />
               </div>
 
               <div className="space-y-1.5">
-                <h2 className="text-lg font-bold text-white">
-                  How can CampusSaathi assist you today?
+                <h2 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white">
+                  How can CampusSaathi assist you?
                 </h2>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Ask any questions about attendance rules, exam timetables, invigilation duty, student grades, or campus policies.
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  Inquire about attendance rules, exam timetables, invigilation duties, student marks, or institutional regulations.
                 </p>
               </div>
 
               {/* Suggested Prompt Chips */}
               <div className="pt-2">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2.5">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2.5">
                   Suggested Questions
                 </div>
                 <div className="flex flex-wrap justify-center gap-2">
@@ -201,9 +195,9 @@ export default function ChatPage() {
                       key={idx}
                       type="button"
                       onClick={() => handleSend(q)}
-                      className="rounded-xl bg-slate-900/90 hover:bg-indigo-950 border border-slate-800 hover:border-cyan-500/50 px-3 py-2 text-xs text-slate-300 hover:text-cyan-300 transition-all text-left active:scale-95 min-h-[40px] flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                      className="rounded-lg bg-zinc-50 dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 hover:border-sky-500/40 px-3 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:text-sky-500 dark:hover:text-sky-400 transition-all text-left active:scale-95 min-h-[38px] flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 shadow-xs"
                     >
-                      <Sparkles className="h-3 w-3 text-cyan-400 shrink-0" />
+                      <Sparkles className="h-3 w-3 text-sky-500 shrink-0" />
                       <span>{q}</span>
                     </button>
                   ))}
@@ -223,17 +217,17 @@ export default function ChatPage() {
               >
                 {/* Assistant Avatar */}
                 {m.role === "assistant" && (
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white shadow-sm mt-1">
-                    <Bot className="h-4 w-4" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs mt-1">
+                    <Bot className="h-4 w-4 text-sky-500" />
                   </div>
                 )}
 
                 {/* Bubble */}
                 <div
-                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-xl p-4 text-xs sm:text-sm leading-relaxed ${
                     m.role === "user"
-                      ? "bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md rounded-tr-sm"
-                      : "bg-slate-900/90 border border-slate-800/90 text-slate-100 shadow-sm rounded-tl-sm"
+                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-tr-xs shadow-xs"
+                      : "bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 text-zinc-900 dark:text-zinc-100 rounded-tl-xs shadow-xs"
                   }`}
                 >
                   {/* Content */}
@@ -243,8 +237,8 @@ export default function ChatPage() {
 
                   {/* Grounded Citations Pill */}
                   {m.citations && m.citations.length > 0 && (
-                    <div className="mt-3 pt-2.5 border-t border-slate-800/80 space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
+                    <div className="mt-3 pt-2.5 border-t border-zinc-200 dark:border-zinc-800/80 space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[10px] font-semibold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
                         <BookOpen className="h-3 w-3" />
                         <span>Verified College Sources:</span>
                       </div>
@@ -252,11 +246,11 @@ export default function ChatPage() {
                         {m.citations.map((c, i) => (
                           <div
                             key={i}
-                            className="inline-flex items-center gap-1 rounded-md bg-slate-950/80 border border-slate-800 px-2 py-0.5 text-[10px] text-slate-300"
+                            className="inline-flex items-center gap-1 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-2 py-0.5 text-[10px] text-zinc-700 dark:text-zinc-300"
                           >
-                            <CheckCircle2 className="h-2.5 w-2.5 text-emerald-400" />
+                            <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" />
                             <span>
-                              {c.title} • <strong className="text-cyan-300">{c.section}</strong>
+                              {c.title} • <strong className="text-zinc-900 dark:text-zinc-100">{c.section}</strong>
                             </span>
                           </div>
                         ))}
@@ -265,17 +259,17 @@ export default function ChatPage() {
                   )}
 
                   {/* Timestamp & Actions */}
-                  <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+                  <div className="mt-2 flex items-center justify-between text-[10px] text-zinc-400">
                     <span>{m.timestamp}</span>
                     {m.role === "assistant" && (
                       <button
                         type="button"
                         onClick={() => handleCopy(m.content, m.id)}
-                        className="hover:text-cyan-300 p-1 rounded transition-colors"
-                        title="Copy text"
+                        className="hover:text-sky-500 p-1 rounded transition-colors"
+                        title="Copy response"
                       >
                         {copiedId === m.id ? (
-                          <Check className="h-3 w-3 text-emerald-400" />
+                          <Check className="h-3 w-3 text-emerald-500" />
                         ) : (
                           <Copy className="h-3 w-3" />
                         )}
@@ -286,7 +280,7 @@ export default function ChatPage() {
 
                 {/* User Avatar */}
                 {m.role === "user" && (
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 shadow-sm mt-1">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 shadow-xs mt-1">
                     <User className="h-4 w-4" />
                   </div>
                 )}
@@ -296,16 +290,16 @@ export default function ChatPage() {
             {/* Typing Indicator */}
             {loading && (
               <div className="flex gap-3 justify-start items-center">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white shadow-sm">
-                  <Bot className="h-4 w-4" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs">
+                  <Bot className="h-4 w-4 text-sky-500" />
                 </div>
-                <div className="rounded-2xl rounded-tl-sm bg-slate-900/90 border border-slate-800/90 px-4 py-3 text-xs text-cyan-300 flex items-center gap-2">
+                <div className="rounded-xl rounded-tl-xs bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 px-4 py-2.5 text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-2 shadow-xs">
                   <span className="flex space-x-1">
-                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce"></span>
-                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]"></span>
-                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.4s]"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-sky-500 animate-bounce"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-sky-500 animate-bounce [animation-delay:0.2s]"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-sky-500 animate-bounce [animation-delay:0.4s]"></span>
                   </span>
-                  <span>CampusSaathi is researching college documents & records...</span>
+                  <span>Researching verified college documents & records...</span>
                 </div>
               </div>
             )}
@@ -320,7 +314,7 @@ export default function ChatPage() {
           e.preventDefault();
           handleSend();
         }}
-        className="pt-3 border-t border-slate-800/80 shrink-0"
+        className="pt-3 border-t border-zinc-200 dark:border-zinc-800/80 shrink-0"
       >
         <div className="relative flex items-center">
           <input
@@ -329,20 +323,20 @@ export default function ChatPage() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask an academic question, policy rule, or student marks..."
             disabled={loading}
-            className="w-full min-h-[48px] rounded-2xl bg-slate-900/90 border border-slate-700/80 pl-4 pr-14 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 transition-colors shadow-inner"
+            className="w-full min-h-[46px] rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 pl-4 pr-14 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors shadow-xs"
           />
 
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="absolute right-1.5 flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:hover:bg-indigo-600 text-white transition-all shadow-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 disabled:opacity-40 transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             aria-label="Send message"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-3.5 w-3.5" />
           </button>
         </div>
 
-        <div className="mt-1.5 text-center text-[10px] text-slate-500">
+        <div className="mt-1.5 text-center text-[10px] text-zinc-400 dark:text-zinc-500">
           CampusSaathi AI Engine • Grounded in Verified Documents • Zero Hallucination
         </div>
       </form>

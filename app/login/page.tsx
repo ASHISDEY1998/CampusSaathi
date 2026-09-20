@@ -4,7 +4,6 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   GraduationCap,
-  Sparkles,
   Lock,
   User,
   Eye,
@@ -90,23 +89,23 @@ function LoginForm() {
   return (
     <div className="w-full max-w-md">
       {/* Brand Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 border border-indigo-500/40 shadow-xl shadow-indigo-950/60 mb-4">
-          <GraduationCap className="h-7 w-7 text-cyan-400" />
+      <div className="text-center mb-6">
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-3 transition-colors">
+          <GraduationCap className="h-6 w-6" />
         </div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-1.5">
-          Campus<span className="text-cyan-400">Saathi</span>
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center justify-center gap-1">
+          Campus<span className="text-sky-500">Saathi</span>
         </h1>
-        <p className="mt-1 text-xs font-medium text-slate-400">
-          Your Intelligent College Companion • Science Exhibition Prototype
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          Official Academic Portal Authentication
         </p>
       </div>
 
       {/* Login Card */}
       <Card className="p-6 sm:p-8">
-        {/* Role Toggle */}
+        {/* Role Selection Tabs */}
         <div
-          className="flex rounded-xl bg-slate-900/90 p-1 border border-slate-800 mb-5"
+          className="flex rounded-lg bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200 dark:border-zinc-800 mb-5"
           role="tablist"
           aria-label="Login Role Selection"
         >
@@ -118,10 +117,10 @@ function LoginForm() {
               setRole("STUDENT");
               setErrorMessage(null);
             }}
-            className={`flex-1 min-h-[40px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+            className={`flex-1 min-h-[38px] rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
               role === "STUDENT"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
+                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
             }`}
           >
             <GraduationCap className="h-3.5 w-3.5" />
@@ -135,14 +134,14 @@ function LoginForm() {
               setRole("TEACHER");
               setErrorMessage(null);
             }}
-            className={`flex-1 min-h-[40px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+            className={`flex-1 min-h-[38px] rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
               role === "TEACHER"
-                ? "bg-cyan-600 text-white shadow-md shadow-cyan-600/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
+                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
             }`}
           >
             <User className="h-3.5 w-3.5" />
-            Teacher
+            Faculty
           </button>
           <button
             type="button"
@@ -152,10 +151,10 @@ function LoginForm() {
               setRole("ADMIN");
               setErrorMessage(null);
             }}
-            className={`flex-1 min-h-[40px] rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+            className={`flex-1 min-h-[38px] rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
               role === "ADMIN"
-                ? "bg-amber-600 text-white shadow-md shadow-amber-600/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
+                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
             }`}
           >
             <Shield className="h-3.5 w-3.5" />
@@ -163,39 +162,38 @@ function LoginForm() {
           </button>
         </div>
 
-        {/* Quick Demo Autofill Bar */}
-        <div className="mb-5 rounded-xl bg-slate-900/50 border border-slate-800/80 p-2.5">
+        {/* Quick Credentials Autofill */}
+        <div className="mb-5 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 p-2.5">
           <div className="flex items-center justify-between text-[11px] mb-2 px-1">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Sparkles className="h-3 w-3 text-cyan-400" />
-              1-Tap Demo Credentials:
+            <span className="text-zinc-500 dark:text-zinc-400">
+              Quick Test Credentials:
             </span>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
             <button
               type="button"
               onClick={() => fillCredentials("ADMIN", "admin", "admin")}
-              className="py-1 px-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[10px] font-semibold text-amber-300 transition-colors text-center"
+              className="py-1 px-2 rounded-md bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors text-center shadow-xs"
             >
-              👑 Admin (admin)
+              Admin
             </button>
             <button
               type="button"
               onClick={() =>
                 fillCredentials("STUDENT", "STU2024CSE001", "DemoPass@2024")
               }
-              className="py-1 px-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[10px] font-semibold text-indigo-300 transition-colors text-center"
+              className="py-1 px-2 rounded-md bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors text-center shadow-xs"
             >
-              🎓 Student
+              Student
             </button>
             <button
               type="button"
               onClick={() =>
                 fillCredentials("TEACHER", "EMP1001", "FacultyPass@2024")
               }
-              className="py-1 px-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[10px] font-semibold text-cyan-300 transition-colors text-center"
+              className="py-1 px-2 rounded-md bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors text-center shadow-xs"
             >
-              👨‍🏫 Teacher
+              Faculty
             </button>
           </div>
         </div>
@@ -206,7 +204,7 @@ function LoginForm() {
           <div>
             <label
               htmlFor="identifier"
-              className="block text-xs font-semibold text-slate-300 mb-1.5"
+              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5"
             >
               {role === "STUDENT"
                 ? "Student ID / Roll No."
@@ -215,7 +213,7 @@ function LoginForm() {
                 : "Administrator ID"}
             </label>
             <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-400 dark:text-zinc-500">
                 {role === "ADMIN" ? (
                   <KeyRound className="h-4 w-4" />
                 ) : (
@@ -234,7 +232,7 @@ function LoginForm() {
                     ? "e.g. EMP1001"
                     : "e.g. admin"
                 }
-                className="w-full min-h-[44px] rounded-xl bg-slate-900/90 border border-slate-700/80 pl-9 pr-3 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-colors font-mono"
+                className="w-full min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 pl-9 pr-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors font-mono"
                 required
               />
             </div>
@@ -244,12 +242,12 @@ function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="block text-xs font-semibold text-slate-300 mb-1.5"
+              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5"
             >
               Password
             </label>
             <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-400 dark:text-zinc-500">
                 <Lock className="h-4 w-4" />
               </div>
               <input
@@ -258,13 +256,13 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full min-h-[44px] rounded-xl bg-slate-900/90 border border-slate-700/80 pl-9 pr-11 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-colors font-mono"
+                className="w-full min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 pl-9 pr-11 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors font-mono"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-300 min-h-[44px] min-w-[44px] justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 min-h-[44px] min-w-[44px] justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-lg"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -278,16 +276,16 @@ function LoginForm() {
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="rounded-xl bg-rose-950/70 border border-rose-500/40 p-3 text-xs text-rose-300 flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
+            <div className="rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 p-3 text-xs text-rose-600 dark:text-rose-400 flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {/* Success Message */}
           {successMessage && (
-            <div className="rounded-xl bg-emerald-950/70 border border-emerald-500/40 p-3 text-xs text-emerald-300 flex items-start gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 p-3 text-xs text-emerald-600 dark:text-emerald-400 flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
               <span>{successMessage}</span>
             </div>
           )}
@@ -295,18 +293,19 @@ function LoginForm() {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full min-h-[48px] font-bold text-sm"
+            variant="primary"
+            className="w-full min-h-[44px] font-semibold text-sm"
             disabled={loading}
           >
-            <span>{loading ? "Verifying Credentials..." : "Sign In to CampusSaathi"}</span>
-            <ArrowRight className="h-4 w-4" />
+            <span>{loading ? "Authenticating..." : "Sign In to CampusSaathi"}</span>
+            <ArrowRight className="h-4 w-4 ml-1.5" />
           </Button>
         </form>
 
-        {/* Security / Architecture Footer */}
-        <div className="mt-6 flex items-center justify-center gap-2 text-center text-xs text-slate-500">
-          <Shield className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-          <span>MongoDB Atlas Bcrypt & Stateless JWT Session</span>
+        {/* Security Footer */}
+        <div className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-zinc-400 dark:text-zinc-500">
+          <Shield className="h-3.5 w-3.5 text-sky-500 shrink-0" />
+          <span>MongoDB Atlas Bcrypt & Stateless JWT Authentication</span>
         </div>
       </Card>
     </div>

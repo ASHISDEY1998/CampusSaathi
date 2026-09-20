@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { getDocumentChunksCollection } from "@/lib/db/collections";
 import { DocumentChunk } from "@/types";
 import { GoogleGenAI } from "@google/genai";
+import { verifyAuthToken, AUTH_COOKIE_NAME } from "@/lib/auth/jwt";
 
 // Helper to recursively collect all .md files in directory
 function getMarkdownFiles(dir: string): string[] {
@@ -97,8 +98,23 @@ function chunkMarkdown(docId: string, filename: string, content: string): Omit<D
   return chunks;
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
     const kbDir = path.resolve(process.cwd(), "knowledge_base");
     if (!fs.existsSync(kbDir)) {
       return NextResponse.json(
@@ -194,8 +210,23 @@ export async function POST() {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    const session = token ? await verifyAuthToken(token) : null;
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Please sign in." },
+        { status: 401 }
+      );
+    }
+    if (session.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Administrator role required." },
+        { status: 403 }
+      );
+    }
+
     const chunksCollection = await getDocumentChunksCollection();
     const count = await chunksCollection.countDocuments();
     const distinctDocs = await chunksCollection.distinct("docId");

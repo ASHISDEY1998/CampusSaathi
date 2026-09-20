@@ -10,12 +10,14 @@ import {
   Settings,
   Bell,
   Moon,
+  Sun,
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 interface AuthUser {
   identifier: string;
@@ -27,6 +29,7 @@ interface AuthUser {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
@@ -72,31 +75,31 @@ export default function ProfilePage() {
       {/* Profile Header Card */}
       <Card className="p-6 sm:p-7 relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-cyan-400 text-white font-extrabold text-xl sm:text-2xl shadow-xl shadow-cyan-500/20 shrink-0">
+          <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-xl sm:text-2xl shadow-xs shrink-0 transition-colors">
             {currentUser ? getInitials(currentUser.name) : <User className="h-9 w-9" />}
           </div>
 
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-white">
-                {currentUser?.name || "Active College Profile"}
+              <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white">
+                {currentUser?.name || "User Profile"}
               </h1>
               <Badge
                 variant={
                   currentUser?.role === "ADMIN"
                     ? "amber"
                     : currentUser?.role === "TEACHER"
-                    ? "cyan"
-                    : "indigo"
+                    ? "sky"
+                    : "default"
                 }
               >
                 {currentUser?.role || "STUDENT"}
               </Badge>
             </div>
-            <p className="text-xs text-slate-400 font-mono">
-              Identifier: {currentUser?.identifier || "STU2024CSE001"} • Role: {currentUser?.role || "Student"}
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-mono">
+              Identifier: {currentUser?.identifier || "—"} • Role: {currentUser?.role || "Student"}
             </p>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-zinc-600 dark:text-zinc-300">
               Department of {currentUser?.department || "Computer Science & Engineering"} • ABC Institute of Technology
             </p>
           </div>
@@ -107,99 +110,109 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Academic Details */}
         <Card className="p-5 space-y-3">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <GraduationCap className="h-4 w-4 text-cyan-400" />
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+            <GraduationCap className="h-4 w-4 text-sky-500" />
             Academic Information
           </h2>
 
           <div className="space-y-2.5 text-xs">
-            <div className="flex justify-between py-1.5 border-b border-slate-800">
-              <span className="text-slate-400">Department</span>
-              <span className="font-semibold text-slate-200">
+            <div className="flex justify-between py-1.5 border-b border-zinc-200 dark:border-zinc-800">
+              <span className="text-zinc-500 dark:text-zinc-400">Department</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
                 {currentUser?.department || "Computer Science & Engineering"}
               </span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-slate-800">
-              <span className="text-slate-400">Institution</span>
-              <span className="font-semibold text-slate-200">ABC Institute of Technology</span>
+            <div className="flex justify-between py-1.5 border-b border-zinc-200 dark:border-zinc-800">
+              <span className="text-zinc-500 dark:text-zinc-400">Institution</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">ABC Institute of Technology</span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-slate-800">
-              <span className="text-slate-400">Affiliation</span>
-              <span className="font-semibold text-slate-200">BPUT / State University</span>
+            <div className="flex justify-between py-1.5 border-b border-zinc-200 dark:border-zinc-800">
+              <span className="text-zinc-500 dark:text-zinc-400">Affiliation</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">State Technical University</span>
             </div>
             <div className="flex justify-between py-1.5">
-              <span className="text-slate-400">Database Status</span>
-              <span className="font-semibold text-emerald-400 flex items-center gap-1">
+              <span className="text-zinc-500 dark:text-zinc-400">Database Status</span>
+              <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                 <CheckCircle2 className="h-3.5 w-3.5" />
-                MongoDB Atlas Synced
+                Verified & Synced
               </span>
             </div>
           </div>
         </Card>
 
-        {/* Account Details */}
+        {/* Security & Session */}
         <Card className="p-5 space-y-3">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Building2 className="h-4 w-4 text-cyan-400" />
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+            <Building2 className="h-4 w-4 text-sky-500" />
             Security & Session
           </h2>
 
           <div className="space-y-2.5 text-xs">
-            <div className="flex justify-between py-1.5 border-b border-slate-800">
-              <span className="text-slate-400">Official Email</span>
-              <span className="font-semibold text-slate-200 truncate max-w-[180px]">
+            <div className="flex justify-between py-1.5 border-b border-zinc-200 dark:border-zinc-800">
+              <span className="text-zinc-500 dark:text-zinc-400">Official Email</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100 truncate max-w-[180px]">
                 {currentUser?.email || "student@abctech.edu.in"}
               </span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-slate-800">
-              <span className="text-slate-400">Session Security</span>
-              <span className="font-semibold text-slate-200 flex items-center gap-1">
-                <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
+            <div className="flex justify-between py-1.5 border-b border-zinc-200 dark:border-zinc-800">
+              <span className="text-zinc-500 dark:text-zinc-400">Session Security</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5 text-sky-500" />
                 Stateless JWT (HMAC-SHA256)
               </span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-slate-800">
-              <span className="text-slate-400">PWA Application</span>
-              <Badge variant="emerald" className="text-[10px]">PWA Ready</Badge>
+            <div className="flex justify-between py-1.5 border-b border-zinc-200 dark:border-zinc-800">
+              <span className="text-zinc-500 dark:text-zinc-400">Access Control</span>
+              <Badge variant="sky" className="text-[10px]">Strict RBAC</Badge>
             </div>
             <div className="flex justify-between py-1.5">
-              <span className="text-slate-400">Environment</span>
-              <span className="font-semibold text-cyan-300">Production Cloud</span>
+              <span className="text-zinc-500 dark:text-zinc-400">Environment</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">Production Cloud</span>
             </div>
           </div>
         </Card>
       </div>
 
-      {/* Settings Rows */}
+      {/* Preferences & Settings */}
       <Card className="p-5 space-y-4">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <Settings className="h-4 w-4 text-cyan-400" />
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+          <Settings className="h-4 w-4 text-sky-500" />
           Application Preferences
         </h2>
 
         <div className="space-y-2 text-xs">
-          <div className="flex items-center justify-between py-2 border-b border-slate-800">
-            <div className="flex items-center gap-2 text-slate-300">
-              <Bell className="h-4 w-4 text-slate-500" />
+          <div className="flex items-center justify-between py-2 border-b border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+              <Bell className="h-4 w-4 text-zinc-400" />
               <span>Campus Circular Notifications</span>
             </div>
-            <span className="text-[11px] text-cyan-400 font-medium">Enabled</span>
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Enabled</span>
           </div>
 
-          <div className="flex items-center justify-between py-2 border-b border-slate-800">
-            <div className="flex items-center gap-2 text-slate-300">
-              <Moon className="h-4 w-4 text-slate-500" />
-              <span>Theme Mode</span>
+          <div className="flex items-center justify-between py-2 border-b border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+              {theme === "dark" ? (
+                <Moon className="h-4 w-4 text-zinc-400" />
+              ) : (
+                <Sun className="h-4 w-4 text-zinc-400" />
+              )}
+              <span>Theme Appearance</span>
             </div>
-            <span className="text-[11px] text-slate-300 font-medium">Dark Mode (Default)</span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="text-[11px] font-semibold text-sky-500 hover:text-sky-600 transition-colors px-2 py-1 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900"
+            >
+              {theme === "dark" ? "Dark Mode (Switch to Light)" : "Light Mode (Switch to Dark)"}
+            </button>
           </div>
 
           <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-2 text-slate-300">
-              <ShieldCheck className="h-4 w-4 text-slate-500" />
-              <span>Data Protection</span>
+            <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+              <ShieldCheck className="h-4 w-4 text-zinc-400" />
+              <span>Role Authorization</span>
             </div>
-            <span className="text-[11px] text-emerald-400 font-medium">RBAC Active</span>
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Server Enforced</span>
           </div>
         </div>
 
@@ -208,9 +221,9 @@ export default function ProfilePage() {
             type="button"
             variant="danger"
             onClick={handleLogout}
-            className="w-full min-h-[44px] font-bold text-xs"
+            className="w-full min-h-[44px] font-semibold text-xs"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-4 w-4 mr-1.5" />
             <span>Sign Out of CampusSaathi</span>
           </Button>
         </div>

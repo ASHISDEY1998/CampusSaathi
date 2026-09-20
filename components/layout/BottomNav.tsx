@@ -47,7 +47,7 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-nav pb-safe"
+      className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/90 dark:bg-black/90 border-t border-zinc-200 dark:border-zinc-800/80 backdrop-blur-md pb-safe transition-colors"
     >
       <div className="mx-auto flex h-16 max-w-md items-center justify-around px-3">
         {NAV_ITEMS.map((item) => {
@@ -61,23 +61,22 @@ export default function BottomNav() {
                 href={item.href}
                 aria-label="CampusSaathi AI Chat"
                 aria-current={isActive ? "page" : undefined}
-                className="group relative flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-center transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl"
+                className="group relative flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-center transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-xl"
               >
-                {/* Floating pill highlight for AI Chat */}
                 <div
                   className={cn(
-                    "flex h-11 w-11 items-center justify-center rounded-2xl transition-all shadow-lg",
+                    "flex h-9 w-9 items-center justify-center rounded-lg transition-all",
                     isActive
-                      ? "bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 text-white shadow-cyan-500/25 ring-2 ring-cyan-400/40"
-                      : "bg-gradient-to-tr from-indigo-900 to-slate-800 text-cyan-300 border border-indigo-500/40 shadow-indigo-950/50"
+                      ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-sm"
+                      : "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800"
                   )}
                 >
-                  <Icon className="h-5 w-5 animate-pulse" />
+                  <Icon className="h-4.5 w-4.5 text-sky-500" />
                 </div>
                 <span
                   className={cn(
-                    "text-[10px] font-semibold mt-1 tracking-tight transition-colors",
-                    isActive ? "text-cyan-400 font-bold" : "text-slate-300"
+                    "text-[10px] mt-0.5 tracking-tight transition-colors",
+                    isActive ? "text-sky-500 font-semibold" : "text-zinc-500 dark:text-zinc-400 font-normal"
                   )}
                 >
                   {item.name}
@@ -93,24 +92,24 @@ export default function BottomNav() {
               aria-label={item.name}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-center transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-xl",
+                "flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 text-center transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-lg",
                 isActive
-                  ? "text-cyan-400"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "text-sky-500"
+                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
               )}
             >
               <div
                 className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
-                  isActive ? "bg-slate-800/80" : ""
+                  "flex h-7 w-7 items-center justify-center rounded-md transition-colors",
+                  isActive ? "text-sky-500" : ""
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-4.5 w-4.5" />
               </div>
               <span
                 className={cn(
                   "text-[10px] mt-0.5 tracking-tight transition-colors",
-                  isActive ? "font-bold text-cyan-400" : "font-medium"
+                  isActive ? "font-semibold text-sky-500" : "font-normal"
                 )}
               >
                 {item.name}

@@ -97,26 +97,25 @@ export default function DesktopNav() {
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-64 shrink-0 border-r border-slate-800 bg-slate-950/60 backdrop-blur-xl min-h-[calc(100vh-4rem)] p-4 justify-between">
+    <aside className="hidden md:flex flex-col w-64 shrink-0 border-r border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-black/40 backdrop-blur-md min-h-[calc(100vh-4rem)] p-4 justify-between transition-colors">
       <div className="space-y-6">
         {/* Institution Status Box */}
-        <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4">
-          <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            <Building2 className="h-3.5 w-3.5 text-cyan-400" />
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 p-3.5 shadow-sm">
+          <div className="flex items-center gap-2 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+            <Building2 className="h-3.5 w-3.5 text-sky-500" />
             Institution Portal
           </div>
-          <p className="mt-1 text-sm font-bold text-slate-100 truncate">
+          <p className="mt-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
             ABC Institute of Technology
           </p>
-          <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-emerald-400 font-medium">System Online & Active</span>
+          <div className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+            Official Campus Portal
           </div>
         </div>
 
         {/* Navigation Group */}
-        <nav aria-label="Desktop Sidebar Navigation" className="space-y-1.5">
-          <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <nav aria-label="Desktop Sidebar Navigation" className="space-y-1">
+          <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             Menu
           </div>
 
@@ -130,10 +129,10 @@ export default function DesktopNav() {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "group flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-medium transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400",
+                  "group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500",
                   isActive
-                    ? "bg-indigo-950/70 text-cyan-400 border border-indigo-500/30 shadow-sm"
-                    : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
+                    ? "bg-zinc-200/70 dark:bg-zinc-900 text-zinc-900 dark:text-white font-semibold border-l-2 border-sky-500 pl-2.5 shadow-xs"
+                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900/60 hover:text-zinc-900 dark:hover:text-white font-normal"
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -141,8 +140,8 @@ export default function DesktopNav() {
                     className={cn(
                       "h-4 w-4 transition-colors",
                       isActive
-                        ? "text-cyan-400"
-                        : "text-slate-400 group-hover:text-slate-200"
+                        ? "text-sky-500"
+                        : "text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300"
                     )}
                   />
                   <span>{item.name}</span>
@@ -150,7 +149,7 @@ export default function DesktopNav() {
 
                 {item.badge && (
                   <Badge
-                    variant={item.badge === "Admin" ? "amber" : "cyan"}
+                    variant={item.badge === "Admin" ? "amber" : "sky"}
                     className="text-[10px]"
                   >
                     {item.badge}
@@ -162,41 +161,41 @@ export default function DesktopNav() {
         </nav>
 
         {/* AI Assistant Callout */}
-        <div className="rounded-2xl border border-indigo-950/80 bg-gradient-to-br from-indigo-950/40 to-slate-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-300">
-            <Sparkles className="h-4 w-4 text-cyan-400" />
-            AI College Companion
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+            <Sparkles className="h-4 w-4 text-sky-500" />
+            Campus AI Assistant
           </div>
-          <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
-            Get instant answers on college attendance rules, examination schedules, student marks, and helpdesk support.
+          <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            Instant answers on verified college policies, exam timetables, marks, and campus circulars.
           </p>
           <Link
             href="/chat"
-            className="mt-3.5 flex items-center justify-center gap-1.5 w-full rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 min-h-[40px] py-2 text-xs font-bold text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="mt-3 flex items-center justify-center gap-1.5 w-full rounded-lg bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 min-h-[40px] py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 shadow-xs"
           >
-            Launch AI Assistant
-            <ExternalLink className="h-3.5 w-3.5" />
+            Open Assistant
+            <ExternalLink className="h-3 w-3" />
           </Link>
         </div>
       </div>
 
       {/* Footer / Account Profile */}
-      <div className="border-t border-slate-800/80 pt-4">
+      <div className="border-t border-zinc-200 dark:border-zinc-800/80 pt-3">
         <Link
           href="/profile"
-          className="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-800/50 transition-colors min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          className="flex items-center gap-3 rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900/60 transition-colors min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-900 to-slate-800 border border-indigo-700/50 text-xs font-bold text-cyan-300">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 dark:bg-zinc-100 text-xs font-semibold text-white dark:text-zinc-900">
             {getInitials(currentUser?.name)}
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-xs font-semibold text-slate-200 truncate">
-              {currentUser?.name || "Account Profile"}
+            <span className="text-xs font-medium text-zinc-900 dark:text-zinc-100 truncate">
+              {currentUser?.name || "User Profile"}
             </span>
-            <span className="text-[10px] text-slate-400 truncate">
+            <span className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">
               {currentUser
                 ? `${currentUser.role} • ${currentUser.department}`
-                : "Active User Session"}
+                : "Active Session"}
             </span>
           </div>
         </Link>

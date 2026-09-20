@@ -296,60 +296,60 @@ export default function AdminPage() {
   return (
     <div className="space-y-8 pb-12">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/80 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1.5">
+          <div className="flex items-center gap-2 text-xs font-semibold text-sky-500 uppercase tracking-wider mb-1.5">
             <Shield className="h-4 w-4" />
             Administrator Control Center
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
             CampusSaathi Management Portal
           </h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Synchronize knowledge base documents and provision verified Student & Teacher credentials.
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Synchronize knowledge base documents and provision verified Student & Faculty credentials.
           </p>
         </div>
 
         {/* Status Pills */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 px-3.5 py-2 text-xs text-slate-300 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>MongoDB: <strong className="text-emerald-400 font-semibold">Connected</strong></span>
+          <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3.5 py-2 text-xs text-zinc-700 dark:text-zinc-300 flex items-center gap-2 shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span>MongoDB: <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">Connected</strong></span>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900/80 px-3.5 py-2 text-xs text-slate-300 flex items-center gap-2">
-            <FileText className="h-3.5 w-3.5 text-cyan-400" />
-            <span>Chunks: <strong className="text-cyan-400 font-semibold">{syncStatus?.indexedChunks ?? 0}</strong></span>
+          <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3.5 py-2 text-xs text-zinc-700 dark:text-zinc-300 flex items-center gap-2 shadow-xs">
+            <FileText className="h-3.5 w-3.5 text-sky-500" />
+            <span>Chunks: <strong className="text-zinc-900 dark:text-white font-semibold">{syncStatus?.indexedChunks ?? 0}</strong></span>
           </div>
         </div>
       </div>
 
       {/* 1. Default Admin Credentials Notice Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-indigo-500/40 bg-gradient-to-r from-indigo-950/80 via-slate-900 to-indigo-950/60 p-5 shadow-xl shadow-indigo-950/40">
+      <div className="relative overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600/30 border border-indigo-400/30 text-cyan-300">
-              <KeyRound className="h-6 w-6" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sky-500">
+              <KeyRound className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-white">
+                <h2 className="text-sm font-semibold text-zinc-900 dark:text-white">
                   Default Administrator Credentials
                 </h2>
-                <Badge variant="cyan" className="text-[10px] py-0.5">
+                <Badge variant="amber" className="text-[10px] py-0.5">
                   Super Admin
                 </Badge>
               </div>
-              <p className="mt-1 text-xs text-slate-300">
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 Use these default credentials to log in or demonstrate administrative privileges.
               </p>
               <div className="mt-2.5 flex flex-wrap items-center gap-4 text-xs font-mono">
-                <div className="flex items-center gap-1.5 rounded-lg bg-slate-950/70 border border-slate-800 px-3 py-1.5 text-slate-200">
-                  <span className="text-slate-400 font-sans">Username / ID:</span>
-                  <strong className="text-cyan-300">admin</strong>
+                <div className="flex items-center gap-1.5 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 text-zinc-800 dark:text-zinc-200">
+                  <span className="text-zinc-500 dark:text-zinc-400 font-sans">Username / ID:</span>
+                  <strong className="text-sky-500">admin</strong>
                 </div>
-                <div className="flex items-center gap-1.5 rounded-lg bg-slate-950/70 border border-slate-800 px-3 py-1.5 text-slate-200">
-                  <span className="text-slate-400 font-sans">Password:</span>
-                  <strong className="text-cyan-300">admin</strong>
+                <div className="flex items-center gap-1.5 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 text-zinc-800 dark:text-zinc-200">
+                  <span className="text-zinc-500 dark:text-zinc-400 font-sans">Password:</span>
+                  <strong className="text-sky-500">admin</strong>
                 </div>
               </div>
             </div>

@@ -34,7 +34,7 @@ const EXAMPLE_TICKETS: ExampleTicket[] = [
     location: "Academic Block B, Room 402",
     priority: "HIGH",
     status: "OPEN",
-    createdAt: "2 hours ago (Example)",
+    createdAt: "2 hours ago",
   },
   {
     id: "CS-TKT-1019",
@@ -44,7 +44,7 @@ const EXAMPLE_TICKETS: ExampleTicket[] = [
     location: "Hostel Block C, 3rd Floor",
     priority: "MEDIUM",
     status: "IN_PROGRESS",
-    createdAt: "Yesterday (Example)",
+    createdAt: "Yesterday",
   },
   {
     id: "CS-TKT-0988",
@@ -54,7 +54,7 @@ const EXAMPLE_TICKETS: ExampleTicket[] = [
     location: "Computing Block, Lab 3",
     priority: "LOW",
     status: "RESOLVED",
-    createdAt: "3 days ago (Example)",
+    createdAt: "3 days ago",
   },
 ];
 
@@ -72,16 +72,15 @@ export default function TicketsPage() {
       {/* Page Heading */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-900/60 border border-indigo-500/30 text-cyan-400">
-              <LifeBuoy className="h-5 w-5" />
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xs">
+              <LifeBuoy className="h-4.5 w-4.5 text-sky-500" />
             </div>
-            <h1 className="text-xl font-extrabold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">
               Campus Helpdesk
             </h1>
-            <Badge variant="emerald">Live Support</Badge>
           </div>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             Submit equipment issues, facility requests, and track maintenance resolution in real time.
           </p>
         </div>
@@ -90,36 +89,37 @@ export default function TicketsPage() {
         <Button
           type="button"
           onClick={() => setShowCreateModal(true)}
-          className="shrink-0 font-bold text-xs"
+          variant="primary"
+          className="shrink-0 font-medium text-xs"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-4 w-4 mr-1.5" />
           <span>Raise a Ticket</span>
         </Button>
       </div>
 
       {/* Ticket Creation Dialog */}
       {showCreateModal && (
-        <Card className="p-5 bg-slate-900/95 border-indigo-500/40 space-y-3">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
-              <LifeBuoy className="h-4 w-4 text-cyan-400" />
+        <Card className="p-5 space-y-3">
+          <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-white">
+              <LifeBuoy className="h-4 w-4 text-sky-500" />
               <span>Raise a Helpdesk Ticket</span>
             </div>
             <button
               type="button"
               onClick={() => setShowCreateModal(false)}
-              className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded"
+              className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 px-2 py-1 rounded-md"
             >
               ✕ Close
             </button>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed">
+          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Report classroom, lab, or hostel equipment issues directly to facility management. You can also file tickets naturally by asking the AI Companion in chat.
           </p>
           <div className="pt-1 flex items-center gap-2">
             <Link
               href="/chat"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 underline"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-sky-500 hover:text-sky-600"
             >
               <span>File via AI Companion &rarr;</span>
             </Link>
@@ -136,10 +136,10 @@ export default function TicketsPage() {
             role="tab"
             aria-selected={filter === status}
             onClick={() => setFilter(status)}
-            className={`min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+            className={`min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
               filter === status
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
+                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
+                : "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800"
             }`}
           >
             {status === "ALL" && "All Tickets (3)"}
@@ -150,18 +150,18 @@ export default function TicketsPage() {
         ))}
       </div>
 
-      {/* Example Ticket Card Structure */}
+      {/* Ticket Card Structure */}
       <div className="space-y-3">
         {filteredTickets.map((ticket) => {
           return (
             <Card
               key={ticket.id}
-              className="p-4 sm:p-5 hover:border-slate-700 transition-colors"
+              className="p-4 sm:p-5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
             >
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-cyan-400">
+                    <span className="font-mono text-xs font-semibold text-sky-500">
                       {ticket.id}
                     </span>
                     <Badge variant="outline">{ticket.category}</Badge>
@@ -178,10 +178,10 @@ export default function TicketsPage() {
                     </Badge>
                   </div>
 
-                  <h2 className="mt-2 text-sm sm:text-base font-bold text-white">
+                  <h2 className="mt-2 text-sm sm:text-base font-semibold text-zinc-900 dark:text-white">
                     {ticket.title}
                   </h2>
-                  <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     {ticket.description}
                   </p>
                 </div>
@@ -193,30 +193,30 @@ export default function TicketsPage() {
                       ticket.status === "OPEN"
                         ? "amber"
                         : ticket.status === "IN_PROGRESS"
-                        ? "cyan"
+                        ? "sky"
                         : "emerald"
                     }
                     className="text-xs px-2.5 py-1"
                   >
-                    {ticket.status === "OPEN" && <AlertCircle className="h-3 w-3" />}
-                    {ticket.status === "IN_PROGRESS" && <Clock className="h-3 w-3" />}
-                    {ticket.status === "RESOLVED" && <CheckCircle2 className="h-3 w-3" />}
+                    {ticket.status === "OPEN" && <AlertCircle className="h-3 w-3 mr-1" />}
+                    {ticket.status === "IN_PROGRESS" && <Clock className="h-3 w-3 mr-1" />}
+                    {ticket.status === "RESOLVED" && <CheckCircle2 className="h-3 w-3 mr-1" />}
                     <span>{ticket.status.replace("_", " ")}</span>
                   </Badge>
                 </div>
               </div>
 
               {/* Card Footer */}
-              <div className="mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+              <div className="mt-3.5 pt-3 border-t border-zinc-200 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-400 dark:text-zinc-500">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3 text-slate-500" />
+                    <MapPin className="h-3 w-3 text-zinc-400" />
                     {ticket.location}
                   </span>
                   <span>• {ticket.createdAt}</span>
                 </div>
 
-                <span className="text-cyan-400/90 font-medium hover:text-cyan-300 transition-colors">
+                <span className="text-sky-500 font-medium hover:text-sky-600 transition-colors">
                   View Ticket History →
                 </span>
               </div>

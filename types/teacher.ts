@@ -7,4 +7,5 @@ export interface Teacher {
   department: string;
   designation: string; // e.g. Professor, Associate Professor, Assistant Professor
   cabinLocation: string; // e.g. Academic Block A, Room 312
+  subjectsTaught?: string[];
 }
