@@ -93,17 +93,17 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto pb-6">
+    <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto pb-4">
       {/* 1. User Identity Section */}
-      <Card className="p-6 sm:p-7 relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-          <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-xl sm:text-2xl shadow-xs shrink-0 transition-colors">
-            {currentUser ? getInitials(currentUser.name) : <User className="h-9 w-9" />}
+      <Card className="p-4 sm:p-6 relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
+          <div className="flex h-14 w-14 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-lg sm:text-2xl shadow-xs shrink-0 transition-colors">
+            {currentUser ? getInitials(currentUser.name) : <User className="h-7 w-7 sm:h-9 sm:w-9" />}
           </div>
 
-          <div className="space-y-1.5 flex-1">
+          <div className="space-y-1 sm:space-y-1.5 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white">
+              <h1 className="text-lg sm:text-2xl font-bold text-zinc-900 dark:text-white">
                 {currentUser?.name || (loading ? "Loading..." : "User Profile")}
               </h1>
               {currentUser?.role && (
@@ -132,7 +132,7 @@ export default function ProfilePage() {
       </Card>
 
       {/* 2. Institution Section */}
-      <Card className="p-6 space-y-4">
+      <Card className="p-4 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
           <div className="flex items-center gap-2">
             <Building className="h-4 w-4 text-sky-500" />

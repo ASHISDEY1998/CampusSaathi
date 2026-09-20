@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Sparkles,
   Shield,
   LogOut,
   Sun,
@@ -155,22 +154,13 @@ export default function Header() {
             <button
               type="button"
               onClick={handleLogout}
-              className="flex sm:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 active:scale-95"
+              className="flex sm:hidden min-h-[40px] min-w-[40px] items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 active:scale-95 transition-colors"
               title="Sign Out"
               aria-label="Sign Out"
             >
               <LogOut className="h-4 w-4" />
             </button>
           )}
-
-          {/* Quick Chat Shortcut for Mobile */}
-          <Link
-            href="/chat"
-            className="flex md:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 text-sky-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors active:scale-95 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none"
-            aria-label="Open AI Assistant"
-          >
-            <Sparkles className="h-4 w-4" />
-          </Link>
         </div>
       </div>
     </header>

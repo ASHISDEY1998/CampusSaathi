@@ -118,7 +118,7 @@ export default function TicketsPage() {
     tickets.filter((t) => t.status === status).length;
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-6">
+    <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto pb-4">
       {/* Page Heading */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
