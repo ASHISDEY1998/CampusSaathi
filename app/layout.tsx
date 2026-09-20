@@ -12,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CampusSaathi — Your Intelligent College Companion",
+  title: "CampusSaathi — Your Intelligent Campus Companion",
   description:
-    "AI-powered college assistant and digital helpdesk for students and faculty. Bridging institutional knowledge with conversational AI.",
+    "Your Intelligent Campus Companion. Modern, unified campus assistance for students, faculty, and administration.",
   manifest: "/manifest.json",
   icons: {
     icon: [

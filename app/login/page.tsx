@@ -2,17 +2,17 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import {
-  GraduationCap,
   Lock,
   User,
   Eye,
   EyeOff,
   ArrowRight,
-  Shield,
   AlertCircle,
   CheckCircle2,
-  KeyRound,
+  HelpCircle,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -22,32 +22,22 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  const [role, setRole] = useState<"STUDENT" | "TEACHER" | "ADMIN">("STUDENT");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const fillCredentials = (
-    selectedRole: "STUDENT" | "TEACHER" | "ADMIN",
-    id: string,
-    pass: string
-  ) => {
-    setRole(selectedRole);
-    setIdentifier(id);
-    setPassword(pass);
-    setErrorMessage(null);
-  };
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (!identifier.trim() || !password) {
-      setErrorMessage("Please enter both ID and password.");
+    const cleanId = identifier.trim();
+    if (!cleanId || !password) {
+      setErrorMessage("Please enter both your ID and password.");
       return;
     }
 
@@ -57,30 +47,33 @@ function LoginForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          identifier: identifier.trim(),
+          identifier: cleanId,
           password,
         }),
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setSuccessMessage(`Signed in as ${data.user.name}. Redirecting...`);
+        const user = data.data?.user || data.user;
+        setSuccessMessage(`Welcome back, ${user.name}. Redirecting...`);
 
-        // Redirect based on role or callbackUrl
+        // Server-verified role determines landing destination
         const destination =
           callbackUrl ||
-          (data.user.role === "ADMIN" ? "/admin" : "/dashboard");
+          (user.role === "ADMIN" ? "/admin" : "/dashboard");
 
         setTimeout(() => {
           router.push(destination);
           router.refresh();
-        }, 600);
+        }, 500);
       } else {
-        setErrorMessage(data.error || "Authentication failed. Please try again.");
+        const message =
+          data.error?.message ||
+          (res.status === 401 ? "Invalid ID or password." : "Unable to sign in right now. Please try again.");
+        setErrorMessage(message);
       }
-    } catch (err: unknown) {
-      const error = err as Error;
-      setErrorMessage(error.message || "Network error. Please try again.");
+    } catch {
+      setErrorMessage("Unable to sign in right now. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -90,162 +83,79 @@ function LoginForm() {
     <div className="w-full max-w-md">
       {/* Brand Header */}
       <div className="text-center mb-6">
-        <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-3 transition-colors">
-          <GraduationCap className="h-6 w-6" />
+        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-3 overflow-hidden p-1.5 transition-colors">
+          <Image
+            src="/branding/campussaathi-mark.svg"
+            alt="CampusSaathi Mark"
+            width={48}
+            height={48}
+            className="h-full w-full object-contain"
+            priority
+          />
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center justify-center gap-1">
           Campus<span className="text-sky-500">Saathi</span>
         </h1>
-        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          Official Academic Portal Authentication
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 font-medium tracking-wide">
+          Your Intelligent Campus Companion
         </p>
       </div>
 
-      {/* Login Card */}
+      {/* Production Login Card */}
       <Card className="p-6 sm:p-8">
-        {/* Role Selection Tabs */}
-        <div
-          className="flex rounded-lg bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200 dark:border-zinc-800 mb-5"
-          role="tablist"
-          aria-label="Login Role Selection"
-        >
-          <button
-            type="button"
-            role="tab"
-            aria-selected={role === "STUDENT"}
-            onClick={() => {
-              setRole("STUDENT");
-              setErrorMessage(null);
-            }}
-            className={`flex-1 min-h-[38px] rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
-              role === "STUDENT"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
-                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
-            }`}
-          >
-            <GraduationCap className="h-3.5 w-3.5" />
-            Student
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={role === "TEACHER"}
-            onClick={() => {
-              setRole("TEACHER");
-              setErrorMessage(null);
-            }}
-            className={`flex-1 min-h-[38px] rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
-              role === "TEACHER"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
-                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
-            }`}
-          >
-            <User className="h-3.5 w-3.5" />
-            Faculty
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={role === "ADMIN"}
-            onClick={() => {
-              setRole("ADMIN");
-              setErrorMessage(null);
-            }}
-            className={`flex-1 min-h-[38px] rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
-              role === "ADMIN"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-semibold shadow-xs"
-                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
-            }`}
-          >
-            <Shield className="h-3.5 w-3.5" />
-            Admin
-          </button>
-        </div>
-
-        {/* Quick Credentials Autofill */}
-        <div className="mb-5 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 p-2.5">
-          <div className="flex items-center justify-between text-[11px] mb-2 px-1">
-            <span className="text-zinc-500 dark:text-zinc-400">
-              Quick Test Credentials:
-            </span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              onClick={() => fillCredentials("ADMIN", "admin", "admin")}
-              className="py-1 px-2 rounded-md bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors text-center shadow-xs"
-            >
-              Admin
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                fillCredentials("STUDENT", "STU2024CSE001", "DemoPass@2024")
-              }
-              className="py-1 px-2 rounded-md bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors text-center shadow-xs"
-            >
-              Student
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                fillCredentials("TEACHER", "EMP1001", "FacultyPass@2024")
-              }
-              className="py-1 px-2 rounded-md bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors text-center shadow-xs"
-            >
-              Faculty
-            </button>
-          </div>
+        <div className="mb-5">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-white">
+            Welcome back
+          </h2>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            Sign in with your institutional credentials
+          </p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Identifier Input */}
+          {/* Unified Identifier Input */}
           <div>
             <label
               htmlFor="identifier"
               className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5"
             >
-              {role === "STUDENT"
-                ? "Student ID / Roll No."
-                : role === "TEACHER"
-                ? "Employee ID"
-                : "Administrator ID"}
+              Student ID / Employee ID
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-400 dark:text-zinc-500">
-                {role === "ADMIN" ? (
-                  <KeyRound className="h-4 w-4" />
-                ) : (
-                  <User className="h-4 w-4" />
-                )}
+                <User className="h-4 w-4" />
               </div>
               <input
                 id="identifier"
                 type="text"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder={
-                  role === "STUDENT"
-                    ? "e.g. STU2024CSE001"
-                    : role === "TEACHER"
-                    ? "e.g. EMP1001"
-                    : "e.g. admin"
-                }
-                className="w-full min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 pl-9 pr-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors font-mono"
+                placeholder="e.g. STU2024CSE001 or EMP1001"
                 required
+                autoComplete="username"
+                className="w-full min-h-[44px] rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 pl-10 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors"
               />
             </div>
           </div>
 
           {/* Password Input */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5"
-            >
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label
+                htmlFor="password"
+                className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              >
+                Password
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowHelpModal(true)}
+                className="text-[11px] font-medium text-sky-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              >
+                Forgot password?
+              </button>
+            </div>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-400 dark:text-zinc-500">
                 <Lock className="h-4 w-4" />
@@ -255,15 +165,16 @@ function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="w-full min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 pl-9 pr-11 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors font-mono"
+                placeholder="Enter your password"
                 required
+                autoComplete="current-password"
+                className="w-full min-h-[44px] rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 pl-10 pr-10 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 min-h-[44px] min-w-[44px] justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-lg"
                 aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -294,20 +205,49 @@ function LoginForm() {
           <Button
             type="submit"
             variant="primary"
-            className="w-full min-h-[44px] font-semibold text-sm"
+            className="w-full min-h-[44px] font-semibold text-sm justify-center mt-2"
             disabled={loading}
           >
-            <span>{loading ? "Authenticating..." : "Sign In to CampusSaathi"}</span>
+            <span>{loading ? "Authenticating..." : "Sign In"}</span>
             <ArrowRight className="h-4 w-4 ml-1.5" />
           </Button>
         </form>
-
-        {/* Security Footer */}
-        <div className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-zinc-400 dark:text-zinc-500">
-          <Shield className="h-3.5 w-3.5 text-sky-500 shrink-0" />
-          <span>MongoDB Atlas Bcrypt & Stateless JWT Authentication</span>
-        </div>
       </Card>
+
+      {/* Forgot Password Modal */}
+      {showHelpModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <Card className="max-w-sm w-full p-6 space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2">
+                <HelpCircle className="h-5 w-5 text-sky-500" />
+                <h3 className="font-semibold text-sm text-zinc-900 dark:text-white">
+                  Credential Assistance
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowHelpModal(false)}
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
+              For security reasons, password resets are handled through your campus administration. Please contact your institution&apos;s Academic Office or IT Helpdesk with your student ID or employee number.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full text-xs min-h-[38px] justify-center"
+              onClick={() => setShowHelpModal(false)}
+            >
+              Close
+            </Button>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
@@ -316,7 +256,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="py-12 text-center text-xs text-slate-400">
+        <div className="py-12 text-center text-xs text-zinc-400">
           Loading CampusSaathi Portal...
         </div>
       }

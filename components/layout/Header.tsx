@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  GraduationCap,
   Sparkles,
   Shield,
   LogOut,
@@ -72,8 +72,14 @@ export default function Header() {
           className="flex items-center gap-2.5 transition-opacity hover:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-lg"
           aria-label="CampusSaathi Home"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm transition-colors">
-            <GraduationCap className="h-5 w-5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-1 transition-colors overflow-hidden">
+            <Image
+              src="/branding/campussaathi-mark.svg"
+              alt="CampusSaathi Mark"
+              width={28}
+              height={28}
+              className="h-full w-full object-contain"
+            />
           </div>
 
           <div className="flex flex-col">
@@ -81,7 +87,7 @@ export default function Header() {
               Campus<span className="text-sky-500">Saathi</span>
             </span>
             <span className="hidden sm:inline-block text-[11px] font-normal text-zinc-500 dark:text-zinc-400 -mt-0.5 tracking-normal">
-              Your Intelligent College Companion
+              Your Intelligent Campus Companion
             </span>
           </div>
         </Link>

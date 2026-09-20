@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAuthToken, AUTH_COOKIE_NAME } from "@/lib/auth/jwt";
+import { requireAuth } from "@/lib/api/auth";
+import { apiError } from "@/lib/api/response";
 import {
   getStudentsCollection,
   getMarksCollection,
@@ -10,85 +11,88 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
-    // 1. Enforce server-side authentication from verified JWT
-    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
-    const session = token ? await verifyAuthToken(token) : null;
+    const { session, errorResponse } = await requireAuth(request, ["STUDENT"]);
+    if (errorResponse) return errorResponse;
 
-    if (!session) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized: Please sign in." },
-        { status: 401 }
-      );
-    }
-
-    // 2. Strict Role Enforcement: Only STUDENT is authorized
-    if (session.role !== "STUDENT") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Forbidden: Student access only. You do not have permission to view student academic records.",
-        },
-        { status: 403 }
-      );
-    }
-
-    // 3. Query records strictly bound to session.identifier (Zero trust on user-supplied query params)
     const studentId = session.identifier;
-    const department = session.department || "CSE";
 
     try {
-      const studentsCol = await getStudentsCollection();
-      const marksCol = await getMarksCollection();
-      const timetablesCol = await getTimetablesCollection();
-      const noticesCol = await getNoticesCollection();
-      const ticketsCol = await getTicketsCollection();
+      const [studentsCol, marksCol, timetablesCol, noticesCol, ticketsCol] = await Promise.all([
+        getStudentsCollection(),
+        getMarksCollection(),
+        getTimetablesCollection(),
+        getNoticesCollection(),
+        getTicketsCollection(),
+      ]);
 
       const [profile, marks, timetables, notices, tickets] = await Promise.all([
         studentsCol.findOne({ studentId }),
         marksCol.find({ studentId }).toArray(),
-        timetablesCol.find({ department }).limit(5).toArray(),
+        timetablesCol.find({ department: session.department }).toArray(),
         noticesCol.find().sort({ date: -1 }).limit(5).toArray(),
-        ticketsCol.find({ submittedBy: studentId }).sort({ createdAt: -1 }).limit(5).toArray(),
+        ticketsCol.find({ userId: studentId }).sort({ createdAt: -1 }).limit(5).toArray(),
       ]);
+
+      const formattedProfile = profile
+        ? {
+            year: profile.year,
+            semester: profile.semester,
+            cgpa: profile.cgpa,
+            phone: profile.phone,
+          }
+        : null;
+
+      const formattedMarks = marks.map((m) => ({
+        subjectCode: m.subjectCode,
+        subjectName: m.subjectName,
+        semester: m.semester,
+        internalMarks: m.internalMarks,
+        endSemMarks: m.endSemMarks,
+        totalMarks: m.totalMarks,
+        grade: m.grade,
+      }));
+
+      const payload = {
+        user: {
+          identifier: session.identifier,
+          name: session.name,
+          email: session.email,
+          department: session.department,
+          role: session.role,
+        },
+        profile: formattedProfile,
+        marks: formattedMarks,
+        timetables: timetables.map((t) => ({
+          department: t.department,
+          semester: t.semester,
+          dayOfWeek: t.dayOfWeek,
+          slots: t.slots || [],
+        })),
+        notices: notices.map((n) => ({
+          title: n.title,
+          category: n.category,
+          date: n.date,
+          content: n.content,
+          priority: n.priority,
+        })),
+        tickets: tickets.map((t) => ({
+          ticketId: t.ticketId,
+          category: t.category,
+          description: t.description,
+          status: t.status,
+          priority: t.priority,
+          createdAt: t.createdAt,
+        })),
+      };
 
       return NextResponse.json({
         success: true,
-        user: {
-          identifier: session.identifier,
-          name: session.name,
-          email: session.email,
-          department: session.department,
-          role: session.role,
-        },
-        profile: profile
-          ? {
-              year: profile.year,
-              semester: profile.semester,
-              cgpa: profile.cgpa,
-              phone: profile.phone,
-            }
-          : {
-              year: 3,
-              semester: 6,
-              cgpa: 8.84,
-            },
-        marks: marks.map((m) => ({
-          subjectCode: m.subjectCode,
-          subjectName: m.subjectName,
-          semester: m.semester,
-          internalMarks: m.internalMarks,
-          endSemMarks: m.endSemMarks,
-          totalMarks: m.totalMarks,
-          grade: m.grade,
-        })),
-        timetables,
-        notices,
-        tickets,
+        data: payload,
+        ...payload,
       });
-    } catch {
-      // Fallback if MongoDB is offline, return basic session info
-      return NextResponse.json({
-        success: true,
+    } catch (dbError) {
+      console.error("Database error in student dashboard:", dbError);
+      const emptyPayload = {
         user: {
           identifier: session.identifier,
           name: session.name,
@@ -96,22 +100,21 @@ export async function GET(request: NextRequest) {
           department: session.department,
           role: session.role,
         },
-        profile: {
-          year: 3,
-          semester: 6,
-          cgpa: 8.84,
-        },
+        profile: null,
         marks: [],
         timetables: [],
         notices: [],
         tickets: [],
+      };
+
+      return NextResponse.json({
+        success: true,
+        data: emptyPayload,
+        ...emptyPayload,
       });
     }
   } catch (error: unknown) {
-    const err = error as Error;
-    return NextResponse.json(
-      { success: false, error: err.message || "Failed to fetch student data." },
-      { status: 500 }
-    );
+    console.error("Student dashboard API error:", error);
+    return apiError("SERVER_ERROR", "Failed to retrieve student dashboard data.", 500);
   }
 }

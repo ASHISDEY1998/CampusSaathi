@@ -84,6 +84,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      data: {
+        users: sanitizedUsers,
+        total: sanitizedUsers.length,
+      },
       users: sanitizedUsers,
       total: sanitizedUsers.length,
     });

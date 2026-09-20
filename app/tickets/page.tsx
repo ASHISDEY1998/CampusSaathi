@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   LifeBuoy,
@@ -8,67 +8,117 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  MapPin,
+  X,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 
-interface ExampleTicket {
-  id: string;
+interface TicketItem {
+  id?: string;
+  ticketId: string;
   category: string;
-  title: string;
   description: string;
-  location: string;
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: "OPEN" | "IN_PROGRESS" | "RESOLVED";
   createdAt: string;
 }
 
-const EXAMPLE_TICKETS: ExampleTicket[] = [
-  {
-    id: "CS-TKT-1042",
-    category: "Classroom Equipment",
-    title: "Projector flickering in Room 402",
-    description: "The HDMI projector resets periodically during morning lectures.",
-    location: "Academic Block B, Room 402",
-    priority: "HIGH",
-    status: "OPEN",
-    createdAt: "2 hours ago",
-  },
-  {
-    id: "CS-TKT-1019",
-    category: "Internet & Wi-Fi",
-    title: "Hostel Block C 3rd Floor Wi-Fi Outage",
-    description: "Intermittent connectivity observed across rooms 301-315.",
-    location: "Hostel Block C, 3rd Floor",
-    priority: "MEDIUM",
-    status: "IN_PROGRESS",
-    createdAt: "Yesterday",
-  },
-  {
-    id: "CS-TKT-0988",
-    category: "Electrical",
-    title: "Lab 3 Air Conditioning cooling issue",
-    description: "AC unit 2 in CSE Lab 3 is blowing ambient air.",
-    location: "Computing Block, Lab 3",
-    priority: "LOW",
-    status: "RESOLVED",
-    createdAt: "3 days ago",
-  },
-];
-
 export default function TicketsPage() {
+  const [tickets, setTickets] = useState<TicketItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"ALL" | "OPEN" | "IN_PROGRESS" | "RESOLVED">("ALL");
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const filteredTickets = EXAMPLE_TICKETS.filter((t) => {
+  // Form state
+  const [category, setCategory] = useState("IT Support");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const fetchTickets = async () => {
+    try {
+      const res = await fetch("/api/tickets");
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setTickets(data.data || []);
+      }
+    } catch {
+      // empty state on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/tickets");
+        const data = await res.json();
+        if (isMounted && res.ok && data.success) {
+          setTickets(data.data || []);
+        }
+      } catch {
+        // empty state on error
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleCreateTicket = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    if (!description.trim()) {
+      setFormError("Please provide a description of the issue.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/tickets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category,
+          description: description.trim(),
+          priority,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setDescription("");
+        setShowCreateModal(false);
+        fetchTickets();
+      } else {
+        setFormError(data.error?.message || "Failed to submit ticket.");
+      }
+    } catch {
+      setFormError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const filteredTickets = tickets.filter((t) => {
     if (filter === "ALL") return true;
     return t.status === filter;
   });
 
+  const countByStatus = (status: "OPEN" | "IN_PROGRESS" | "RESOLVED") =>
+    tickets.filter((t) => t.status === status).length;
+
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-4">
+    <div className="space-y-6 max-w-4xl mx-auto pb-6">
       {/* Page Heading */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -90,7 +140,7 @@ export default function TicketsPage() {
           type="button"
           onClick={() => setShowCreateModal(true)}
           variant="primary"
-          className="shrink-0 font-medium text-xs"
+          className="shrink-0 font-medium text-xs justify-center"
         >
           <Plus className="h-4 w-4 mr-1.5" />
           <span>Raise a Ticket</span>
@@ -99,35 +149,105 @@ export default function TicketsPage() {
 
       {/* Ticket Creation Dialog */}
       {showCreateModal && (
-        <Card className="p-5 space-y-3">
-          <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-white">
-              <LifeBuoy className="h-4 w-4 text-sky-500" />
-              <span>Raise a Helpdesk Ticket</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <Card className="max-w-lg w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+              <div className="flex items-center gap-2">
+                <LifeBuoy className="h-4 w-4 text-sky-500" />
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+                  New Helpdesk Request
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCreateModal(false)}
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setShowCreateModal(false)}
-              className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 px-2 py-1 rounded-md"
-            >
-              ✕ Close
-            </button>
-          </div>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Report classroom, lab, or hostel equipment issues directly to facility management. You can also file tickets naturally by asking the AI Companion in chat.
-          </p>
-          <div className="pt-1 flex items-center gap-2">
-            <Link
-              href="/chat"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-sky-500 hover:text-sky-600"
-            >
-              <span>File via AI Companion &rarr;</span>
-            </Link>
-          </div>
-        </Card>
+
+            <form onSubmit={handleCreateTicket} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full min-h-[38px] rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-xs text-zinc-900 dark:text-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                >
+                  <option value="IT Support">IT Support & Wi-Fi</option>
+                  <option value="Classroom">Classroom & Lab Equipment</option>
+                  <option value="Electrical">Electrical & Power</option>
+                  <option value="Hostel">Hostel & Facilities</option>
+                  <option value="Academic">Academic Queries</option>
+                  <option value="Administration">Administrative Affairs</option>
+                  <option value="Other">Other Issues</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Priority
+                </label>
+                <select
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value as "LOW" | "MEDIUM" | "HIGH")}
+                  className="w-full min-h-[38px] rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-xs text-zinc-900 dark:text-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                >
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Issue Description
+                </label>
+                <textarea
+                  rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Detail the issue, location (e.g. Room 302), and equipment details..."
+                  required
+                  className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                />
+              </div>
+
+              {formError && (
+                <div className="rounded-md bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 p-2.5 text-xs text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{formError}</span>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCreateModal(false)}
+                  className="text-xs"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={submitting}
+                  className="text-xs"
+                >
+                  {submitting ? "Submitting..." : "Submit Ticket"}
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
       )}
 
-      {/* Category / Status Filter System */}
+      {/* Status Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none" role="tablist">
         {(["ALL", "OPEN", "IN_PROGRESS", "RESOLVED"] as const).map((status) => (
           <button
@@ -142,27 +262,52 @@ export default function TicketsPage() {
                 : "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800"
             }`}
           >
-            {status === "ALL" && "All Tickets (3)"}
-            {status === "OPEN" && "Open (1)"}
-            {status === "IN_PROGRESS" && "In Progress (1)"}
-            {status === "RESOLVED" && "Resolved (1)"}
+            {status === "ALL" && `All Tickets (${tickets.length})`}
+            {status === "OPEN" && `Open (${countByStatus("OPEN")})`}
+            {status === "IN_PROGRESS" && `In Progress (${countByStatus("IN_PROGRESS")})`}
+            {status === "RESOLVED" && `Resolved (${countByStatus("RESOLVED")})`}
           </button>
         ))}
       </div>
 
-      {/* Ticket Card Structure */}
-      <div className="space-y-3">
-        {filteredTickets.map((ticket) => {
-          return (
+      {/* Tickets List or Empty State */}
+      {loading ? (
+        <div className="py-12 text-center text-xs text-zinc-400">
+          Loading tickets...
+        </div>
+      ) : filteredTickets.length === 0 ? (
+        <Card className="p-8 text-center space-y-3">
+          <LifeBuoy className="h-8 w-8 mx-auto text-zinc-400 dark:text-zinc-600" />
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+            No support tickets submitted yet
+          </h3>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
+            Submit equipment issues or facility requests to track resolution in real time.
+          </p>
+          <div className="pt-2">
+            <Button
+              type="button"
+              onClick={() => setShowCreateModal(true)}
+              variant="primary"
+              className="text-xs inline-flex items-center gap-1.5"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span>Raise Ticket</span>
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {filteredTickets.map((ticket) => (
             <Card
-              key={ticket.id}
+              key={ticket.ticketId}
               className="p-4 sm:p-5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
             >
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs font-semibold text-sky-500">
-                      {ticket.id}
+                      {ticket.ticketId}
                     </span>
                     <Badge variant="outline">{ticket.category}</Badge>
                     <Badge
@@ -178,15 +323,12 @@ export default function TicketsPage() {
                     </Badge>
                   </div>
 
-                  <h2 className="mt-2 text-sm sm:text-base font-semibold text-zinc-900 dark:text-white">
-                    {ticket.title}
-                  </h2>
-                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  <p className="mt-2 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 leading-relaxed font-medium">
                     {ticket.description}
                   </p>
                 </div>
 
-                {/* Status Visual Indicator */}
+                {/* Status Indicator */}
                 <div className="shrink-0 self-start">
                   <Badge
                     variant={
@@ -208,22 +350,21 @@ export default function TicketsPage() {
 
               {/* Card Footer */}
               <div className="mt-3.5 pt-3 border-t border-zinc-200 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-400 dark:text-zinc-500">
-                <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3 text-zinc-400" />
-                    {ticket.location}
-                  </span>
-                  <span>• {ticket.createdAt}</span>
-                </div>
-
-                <span className="text-sky-500 font-medium hover:text-sky-600 transition-colors">
-                  View Ticket History →
+                <span>
+                  Submitted {new Date(ticket.createdAt).toLocaleDateString()}
                 </span>
+                <Link
+                  href="/chat"
+                  className="text-sky-500 font-medium hover:text-sky-600 transition-colors inline-flex items-center gap-1"
+                >
+                  <span>Ask AI for updates</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
               </div>
             </Card>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,12 +1,12 @@
 {
-  "name": "CampusSaathi — Your Intelligent College Companion",
+  "name": "CampusSaathi — Your Intelligent Campus Companion",
   "short_name": "CampusSaathi",
-  "description": "AI-powered college assistant and digital helpdesk for students and faculty.",
+  "description": "Your Intelligent Campus Companion. Modern, unified campus assistance for students, faculty, and administration.",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0a0f1d",
-  "theme_color": "#1e1b4b",
+  "background_color": "#09090B",
+  "theme_color": "#09090B",
   "orientation": "portrait-primary",
   "categories": ["education", "productivity"],
   "icons": [
