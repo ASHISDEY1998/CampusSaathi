@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusSaathi — Project Presentation | Purnachandra Group of Institutions</title>
+  <link rel="icon" type="image/svg+xml" href="assets/campussaathi-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-dark">
+  <!-- Top Progress Bar -->
+  <div class="progress-bar-container">
+    <div id="progressBar" class="progress-bar"></div>
+  </div>
+
+  <!-- Main Presentation Container -->
+  <main class="presentation-wrapper" id="presentationWrapper">
+    <!-- Slide 1: Title / Hero Slide -->
+    <section class="slide active" data-slide="1">
+      <div class="slide-content hero-slide">
+        <div class="badge-row">
+          <span class="badge badge-accent">
+            <span class="badge-dot"></span>
+            Academic Session 2026–2027
+          </span>
+          <span class="badge badge-neutral">Project Presentation</span>
+          <span class="badge badge-sky">Next.js 16 • MongoDB • Gemini AI</span>
+        </div>
+
+        <div class="hero-header">
+          <div class="hero-brand">
+            <div class="brand-logo-container">
+              <img src="assets/campussaathi-logo.svg" alt="CampusSaathi Logo" class="brand-logo">
+            </div>
+            <h1 class="hero-title">
+              Campus<span class="text-sky">Saathi</span>
+              <span class="devanagari-subtitle">(कॅम्पस साथी)</span>
+            </h1>
+          </div>
+          <p class="hero-tagline">
+            Next-Generation AI Campus Operating System & Student Companion
+          </p>
+        </div>
+
+        <div class="institution-card">
+          <div class="inst-logo-box">
+            <img src="assets/institute-logo.png" alt="Institute Logo" class="inst-logo" onerror="this.src='assets/institute-logo.svg';">
+          </div>
+          <div class="inst-details">
+            <div class="inst-name">Purnachandra Higher Secondary School</div>
+            <div class="inst-sub">Purnachandra Group of Institutions • Raghunathpur, Baripada</div>
+            <div class="inst-badge">Presented with pride by <strong>+2 First Year Students</strong> (Science, Commerce & Arts)</div>
+          </div>
+        </div>
+
+        <div class="hero-features-grid">
+          <div class="feature-pill">
+            <span class="pill-icon">⚡</span>
+            <span>Tesla-Inspired Minimal UI</span>
+          </div>
+          <div class="feature-pill">
+            <span class="pill-icon">🛡️</span>
+            <span>Strict Role-Based Isolation (RBAC)</span>
+          </div>
+          <div class="feature-pill">
+            <span class="pill-icon">🧠</span>
+            <span>Retrieval-Augmented Gemini AI (RAG)</span>
+          </div>
+          <div class="feature-pill">
+            <span class="pill-icon">📊</span>
+            <span>Real Institutional Master Timetable & Calendar</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Problem Statement & Motivation -->
+    <section class="slide" data-slide="2">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">The Challenge & The Vision</span>
+          <h2 class="slide-title">Why CampusSaathi? Solving Modern Campus Friction</h2>
+        </div>
+
+        <div class="grid-2-col">
+          <div class="card card-warning-glow">
+            <div class="card-header">
+              <div class="card-icon warning-icon">⚠️</div>
+              <h3 class="card-title">Traditional Campus Challenges</h3>
+            </div>
+            <ul class="styled-list">
+              <li>
+                <strong>Information Fragmentation:</strong> Master timetables, notices, and exam schedules are scattered across physical boards or irregular WhatsApp groups.
+              </li>
+              <li>
+                <strong>Hostel Life Restrictions:</strong> Strict regulations (e.g. 2-minute phone windows, Sunday-only 9 AM–5 PM guardian visits, station-leaving passes) cause frequent confusion.
+              </li>
+              <li>
+                <strong>Academic Doubt Delays:</strong> Students wait days for scheduled doubt-clearing sessions without an instant, verified institutional reference.
+              </li>
+              <li>
+                <strong>Security & Role Leakage:</strong> Traditional student portals often suffer from role confusion or accidental access between student, teacher, and admin functions.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-success-glow">
+            <div class="card-header">
+              <div class="card-icon success-icon">✨</div>
+              <h3 class="card-title">The CampusSaathi Solution</h3>
+            </div>
+            <ul class="styled-list">
+              <li>
+                <strong>Unified Digital Hub:</strong> Centralized dashboard for timetables, attendance, notices, and tickets for +2 students and teachers.
+              </li>
+              <li>
+                <strong>24/7 Context-Grounded AI Companion:</strong> An intelligent conversational assistant powered by Google Gemini and trained directly on official PCHSS rules and timetables.
+              </li>
+              <li>
+                <strong>Strict Role-Based Security:</strong> Complete wall separating Student, Teacher, and Administrator domains with zero cross-contamination.
+              </li>
+              <li>
+                <strong>Tesla-Inspired UI:</strong> Clean, high-contrast, distraction-free interface with instant mobile responsiveness and dark/light modes.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: System Architecture Overview -->
+    <section class="slide" data-slide="3">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Architecture & Blueprint</span>
+          <h2 class="slide-title">High-Level 3-Tier Layered Architecture</h2>
+        </div>
+
+        <!-- Interactive Architecture Diagram -->
+        <div class="diagram-wrapper">
+          <div class="arch-layer">
+            <div class="layer-badge">Tier 1: Presentation Layer</div>
+            <div class="layer-content-grid">
+              <div class="arch-box">
+                <div class="arch-box-title">Next.js 16 App Router</div>
+                <div class="arch-box-desc">React 19 Server & Client Components with Turbopack compilation</div>
+              </div>
+              <div class="arch-box">
+                <div class="arch-box-title">Tesla Minimal Design System</div>
+                <div class="arch-box-desc">Dark/Light modes, Sky-Blue accents, Lucide SVG icons, zero lag</div>
+              </div>
+              <div class="arch-box">
+                <div class="arch-box-title">Mobile PWA Ready</div>
+                <div class="arch-box-desc">Responsive layouts, mobile bottom nav, touch optimization</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector">
+            <div class="connector-line"></div>
+            <span class="connector-label">Secure HTTPS / HTTP-Only JWT Cookie Session</span>
+          </div>
+
+          <div class="arch-layer">
+            <div class="layer-badge">Tier 2: Application Gateway & Intelligence</div>
+            <div class="layer-content-grid">
+              <div class="arch-box">
+                <div class="arch-box-title">Next.js Route Handlers</div>
+                <div class="arch-box-desc">Modular REST endpoints: /api/student/*, /api/teacher/*, /api/admin/*</div>
+              </div>
+              <div class="arch-box highlight-box">
+                <div class="arch-box-title">RBAC Firewall & Security</div>
+                <div class="arch-box-desc">HMAC-SHA256 JWT, Bcrypt password hashing, role enforcement</div>
+              </div>
+              <div class="arch-box highlight-box">
+                <div class="arch-box-title">Gemini RAG Pipeline</div>
+                <div class="arch-box-desc">Semantic vector retrieval, chunk similarity search, context injection</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector">
+            <div class="connector-line"></div>
+            <span class="connector-label">Mongoose / MongoDB Native Driver & Gemini API</span>
+          </div>
+
+          <div class="arch-layer">
+            <div class="layer-badge">Tier 3: Persistence & Knowledge Store</div>
+            <div class="layer-content-grid">
+              <div class="arch-box">
+                <div class="arch-box-title">MongoDB Atlas Cloud</div>
+                <div class="arch-box-desc">Collections: users, students, teachers, notices, tickets</div>
+              </div>
+              <div class="arch-box">
+                <div class="arch-box-title">Vector Knowledge Chunks</div>
+                <div class="arch-box-desc">Indexed 768-dim embeddings of rules, timetable & academic calendar</div>
+              </div>
+              <div class="arch-box">
+                <div class="arch-box-title">Google Gemini 2.5 Flash</div>
+                <div class="arch-box-desc">Low-latency reasoning LLM for verified, hallucination-free answers</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Technology Stack -->
+    <section class="slide" data-slide="4">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Engineering Foundation</span>
+          <h2 class="slide-title">Production Technology Stack Breakdown</h2>
+        </div>
+
+        <div class="grid-4-col">
+          <div class="tech-card">
+            <div class="tech-badge tech-frontend">Frontend</div>
+            <h3 class="tech-name">Next.js 16 + React 19</h3>
+            <p class="tech-desc">Modern App Router architecture, Turbopack HMR, and Server Components for instant load speeds.</p>
+            <div class="tech-tags">
+              <span>TypeScript</span>
+              <span>Tailwind Tokens</span>
+              <span>Lucide Icons</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-badge tech-backend">Backend & API</div>
+            <h3 class="tech-name">Node.js Serverless</h3>
+            <p class="tech-desc">Microservice-style Next.js Edge & Route Handlers with stateless architecture.</p>
+            <div class="tech-tags">
+              <span>RESTful APIs</span>
+              <span>Zod Validation</span>
+              <span>Middleware</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-badge tech-db">Database</div>
+            <h3 class="tech-name">MongoDB Atlas</h3>
+            <p class="tech-desc">Cloud NoSQL database supporting high concurrency, dynamic schemas, and cascade operations.</p>
+            <div class="tech-tags">
+              <span>Mongoose</span>
+              <span>BSON</span>
+              <span>Vector Search</span>
+            </div>
+          </div>
+
+          <div class="tech-card">
+            <div class="tech-badge tech-ai">Intelligence</div>
+            <h3 class="tech-name">Google Gemini 2.5</h3>
+            <p class="tech-desc">Advanced Multimodal LLM paired with text-embedding-001 for RAG institutional query resolution.</p>
+            <div class="tech-tags">
+              <span>RAG Engine</span>
+              <span>Cosine Similarity</span>
+              <span>Source Citations</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="security-banner">
+          <div class="sec-icon">🔒</div>
+          <div class="sec-text">
+            <strong>Enterprise-Grade Security:</strong> Cryptographically signed JWT tokens stored strictly in <code>httpOnly</code>, <code>sameSite=lax</code> cookies. Zero local storage exposure prevents XSS & CSRF token theft.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Authentication & Strict RBAC Flow -->
+    <section class="slide" data-slide="5">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Security & Access Control</span>
+          <h2 class="slide-title">Strict Role-Based Access Control (RBAC) Flow</h2>
+        </div>
+
+        <div class="flow-container">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <div class="step-card">
+              <h4>User Credential Entry</h4>
+              <p>User enters Roll Number / Employee ID / Admin ID and password</p>
+            </div>
+          </div>
+
+          <div class="flow-arrow">→</div>
+
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <div class="step-card">
+              <h4>API Verification</h4>
+              <p><code>POST /api/auth/login</code> looks up MongoDB & verifies Bcrypt hash</p>
+            </div>
+          </div>
+
+          <div class="flow-arrow">→</div>
+
+          <div class="flow-step">
+            <div class="step-num">3</div>
+            <div class="step-card">
+              <h4>JWT Token Minting</h4>
+              <p>Creates signed JWT with role claim: <code>STUDENT</code>, <code>TEACHER</code>, or <code>ADMIN</code></p>
+            </div>
+          </div>
+
+          <div class="flow-arrow">→</div>
+
+          <div class="flow-step">
+            <div class="step-num">4</div>
+            <div class="step-card">
+              <h4>Role Gateway Routing</h4>
+              <p>Middleware checks role claim and securely redirects to dedicated portal</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role Destination Columns -->
+        <div class="role-grid">
+          <div class="role-card role-student">
+            <div class="role-header">
+              <span class="role-icon">🎓</span>
+              <h4>STUDENT ROLE</h4>
+            </div>
+            <div class="role-route">Route: <code>/dashboard</code> (Student View)</div>
+            <ul class="role-perms">
+              <li>✓ View Class Routine & Timetable</li>
+              <li>✓ Check Exam Calendar & Attendance</li>
+              <li>✓ AI Chatbot Assistant for Rules</li>
+              <li>✓ Submit Helpdesk Tickets</li>
+              <li>✗ Absolutely NO access to Teacher/Admin tools</li>
+            </ul>
+          </div>
+
+          <div class="role-card role-teacher">
+            <div class="role-header">
+              <span class="role-icon">👨‍🏫</span>
+              <h4>TEACHER ROLE</h4>
+            </div>
+            <div class="role-route">Route: <code>/dashboard</code> (Teacher View)</div>
+            <ul class="role-perms">
+              <li>✓ View Teaching Schedule & Sections</li>
+              <li>✓ Sunday Emergency Duty Alerts</li>
+              <li>✓ Doubt Clearing Diary Tracking</li>
+              <li>✓ Respond to Student Tickets</li>
+              <li>✗ Strictly NO access to Admin Settings</li>
+            </ul>
+          </div>
+
+          <div class="role-card role-admin">
+            <div class="role-header">
+              <span class="role-icon">⚙️</span>
+              <h4>ADMIN ROLE</h4>
+            </div>
+            <div class="role-route">Route: <code>/admin</code> (Admin Portal)</div>
+            <ul class="role-perms">
+              <li>✓ Student & Teacher Directory CRUD</li>
+              <li>✓ Instant Password Reset Modal</li>
+              <li>✓ 1-Click Knowledge Base Synchronizer</li>
+              <li>✓ MongoDB Safe Cascade Deletion</li>
+              <li>✓ Institute Branding & Identity Settings</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: RAG AI Pipeline Flowchart -->
+    <section class="slide" data-slide="6">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Artificial Intelligence</span>
+          <h2 class="slide-title">How the CampusSaathi RAG Pipeline Operates</h2>
+        </div>
+
+        <div class="rag-pipeline-grid">
+          <!-- Ingestion Pipeline -->
+          <div class="pipeline-block">
+            <div class="pipeline-title">
+              <span class="pipe-num">Phase A</span>
+              <h3>Offline / Admin Knowledge Ingestion</h3>
+            </div>
+            <div class="pipe-steps">
+              <div class="pipe-step-box">
+                <span class="step-tag">1. Official Documents</span>
+                <p>Authentic Markdown records: 22-point student rules, faculty norms, master timetables, academic calendars.</p>
+              </div>
+              <div class="pipe-step-arrow">↓</div>
+              <div class="pipe-step-box">
+                <span class="step-tag">2. Semantic Chunking</span>
+                <p>Documents split by sections (<code>##</code>, <code>###</code>) with document IDs, page references, and section titles.</p>
+              </div>
+              <div class="pipe-step-arrow">↓</div>
+              <div class="pipe-step-box">
+                <span class="step-tag">3. Vectorization & Storage</span>
+                <p>Gemini Embedding generates 768-dimensional dense vectors stored in MongoDB <code>document_chunks</code>.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-Time Retrieval Pipeline -->
+          <div class="pipeline-block">
+            <div class="pipeline-title">
+              <span class="pipe-num">Phase B</span>
+              <h3>Real-Time Student Query Resolution</h3>
+            </div>
+            <div class="pipe-steps">
+              <div class="pipe-step-box">
+                <span class="step-tag">1. Student Ask</span>
+                <p>Student asks: <em>"Can parents visit me on weekdays, and can I keep a mobile phone in the hostel?"</em></p>
+              </div>
+              <div class="pipe-step-arrow">↓</div>
+              <div class="pipe-step-box">
+                <span class="step-tag">2. Semantic Search</span>
+                <p>System finds top chunks from <code>general_rules_and_code_of_conduct.md</code> (Rules #13 & #14) with high similarity score.</p>
+              </div>
+              <div class="pipe-step-arrow">↓</div>
+              <div class="pipe-step-box highlight-pipe">
+                <span class="step-tag">3. Grounded Answer</span>
+                <p>Gemini 2.5 Flash generates an instant, 100% factual response: <em>"No, mobile phones are strictly prohibited (Rule 13). Guardians may visit only on Sundays from 9 AM to 5 PM with authority permission (Rule 14)."</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Student Portal Experience -->
+    <section class="slide" data-slide="7">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">User Experience</span>
+          <h2 class="slide-title">The Student Portal: Built for +2 First Year Scholars</h2>
+        </div>
+
+        <div class="portal-feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Master Timetable</h3>
+            <p>Full daily routine from 8:30 AM to 5:30 PM with genuine teacher names (Ratan Sir, Debasish Sir, Laxmidhar Sir, Sakuntala Mam, etc.).</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Academic Milestones</h3>
+            <p>Upcoming test reminders: IAT-1, IAT-2, IAT-3, Half Yearly, and Annual Board Examinations with exact submission dates.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Attendance & Grades</h3>
+            <p>Continuous attendance tracker ensuring compliance with the mandatory 75% attendance policy and internal assessment scores.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>AI Campus Companion</h3>
+            <p>Instant answers to any campus query: hostel rules, phone restrictions, leave applications, or syllabus details in seconds.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🎫</div>
+            <h3>Grievance Helpdesk</h3>
+            <p>Submit and track academic, hostel, or administration tickets with transparent progress updates and teacher replies.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>Mobile-First Design</h3>
+            <p>Custom mobile navigation with safe-bottom floating inputs preventing virtual keyboard layout shifts on any smartphone.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Teacher & Faculty Portal Experience -->
+    <section class="slide" data-slide="8">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Faculty Empowerment</span>
+          <h2 class="slide-title">Teacher Portal: Simplifying Academic Administration</h2>
+        </div>
+
+        <div class="grid-3-col">
+          <div class="portal-card">
+            <div class="portal-badge">Schedule</div>
+            <h3>Class Routine & Allotments</h3>
+            <p>Immediate daily view of scheduled lectures, laboratory practicals, and assigned adjustments across Science, Commerce, and Arts sections.</p>
+            <div class="portal-highlight">Includes IT & Electronics practical slots</div>
+          </div>
+
+          <div class="portal-card">
+            <div class="portal-badge">Duty Management</div>
+            <h3>Emergency Duty Tracking</h3>
+            <p>Automatic alerts for Sunday and Holiday emergency duties in compliance with institutional norms, preventing salary complications.</p>
+            <div class="portal-highlight">Direct duty chart notification sync</div>
+          </div>
+
+          <div class="portal-card">
+            <div class="portal-badge">Doubt Clearance</div>
+            <h3>Doubt Diary & Mentoring</h3>
+            <p>Dedicated tracking system to log unsolved student queries in lecture hours for focused resolution during weekly doubt-clearing sessions.</p>
+            <div class="portal-highlight">Fosters student-teacher trust</div>
+          </div>
+        </div>
+
+        <div class="quote-box">
+          <div class="quote-symbol">“</div>
+          <div class="quote-body">
+            <em>"Being a teacher he/she should teach each lesson in the classes excellently to the best satisfaction and appreciation of the students."</em>
+            <div class="quote-author">— Section 4, Faculty Service Conditions, PCHSS Baripada</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Administrator Portal Experience -->
+    <section class="slide" data-slide="9">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">System Management</span>
+          <h2 class="slide-title">Admin Portal: Complete Control & Safe Cascade Operations</h2>
+        </div>
+
+        <div class="grid-2-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">👥</div>
+              <h3 class="card-title">Full Directory CRUD & Account Control</h3>
+            </div>
+            <ul class="styled-list">
+              <li>
+                <strong>Edit User Details Modal (✏️):</strong> Update full name, email, department, roll number, academic year, semester, CGPA, phone (for students), or designation & cabin (for teachers).
+              </li>
+              <li>
+                <strong>Direct Password Reset (🔑):</strong> Update credentials immediately without waiting for old password confirmation.
+              </li>
+              <li>
+                <strong>Safe Cascade Deletion (🗑️):</strong> Permanently deletes user records from both <code>users</code> and linked <code>students</code> or <code>teachers</code> collections with safety confirmation dialog.
+              </li>
+              <li>
+                <strong>Root Admin Protection:</strong> Built-in safeguard prevents accidental deletion of the superadmin account.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">⚡</div>
+              <h3 class="card-title">Knowledge Base Sync & System Health</h3>
+            </div>
+            <ul class="styled-list">
+              <li>
+                <strong>1-Click Knowledge Base Synchronizer:</strong> Parses local Markdown documents into semantic chunks and updates MongoDB Atlas vector store in seconds.
+              </li>
+              <li>
+                <strong>Institutional Branding Settings:</strong> Dynamic logo upload and institution name configuration without recompiling code.
+              </li>
+              <li>
+                <strong>Real-Time System Metrics:</strong> Monitor active student count, teacher count, database connectivity, and RAG chunk status.
+              </li>
+              <li>
+                <strong>Notice Board Publishing:</strong> Issue official circulars and holiday notices visible instantly to all portals.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Authentic Institutional Grounding -->
+    <section class="slide" data-slide="10">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Institutional Integrity</span>
+          <h2 class="slide-title">Real Campus Grounding: Purnachandra Group of Institutions</h2>
+        </div>
+
+        <div class="grounding-grid">
+          <div class="grounding-card">
+            <div class="grounding-stat">22</div>
+            <div class="grounding-label">Student Rules & Undertakings</div>
+            <p>From single-line hostel-to-class movement to 2-minute phone caps and strict dress codes.</p>
+          </div>
+
+          <div class="grounding-card">
+            <div class="grounding-stat">12</div>
+            <div class="grounding-label">Faculty Service Norms</div>
+            <p>Class routine diligence, 7-hour workdays, C.L. forfeiture for late arrivals, and emergency duty.</p>
+          </div>
+
+          <div class="grounding-card">
+            <div class="grounding-stat">6 Days</div>
+            <div class="grounding-label">Full Master Timetable</div>
+            <p>Monday through Saturday, 8 daily periods across Science (Girls, Boys, CBSE), Arts, and Commerce.</p>
+          </div>
+
+          <div class="grounding-card">
+            <div class="grounding-stat">2026–27</div>
+            <div class="grounding-label">Academic Milestones</div>
+            <p>IAT 1/2/3, VST 1/2/3, Half Yearly, Foundation Day, Durga Puja, and CHSE Board timelines.</p>
+          </div>
+        </div>
+
+        <div class="highlight-callout">
+          <div class="callout-icon">🏆</div>
+          <div class="callout-text">
+            <strong>Zero Dummy / Mock Data:</strong> Every rule, faculty name, timetable period, and date inside CampusSaathi is authentic and verified directly from official PCHSS Baripada records!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11: Future Roadmap -->
+    <section class="slide" data-slide="11">
+      <div class="slide-content">
+        <div class="slide-header">
+          <span class="slide-eyebrow">Innovation & Expansion</span>
+          <h2 class="slide-title">CampusSaathi Future Roadmap</h2>
+        </div>
+
+        <div class="roadmap-timeline">
+          <div class="roadmap-item">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-content">
+              <span class="roadmap-phase">Phase 1 (Achieved)</span>
+              <h4>Core Campus OS & RAG AI</h4>
+              <p>Next.js 16, RBAC security, MongoDB Atlas, Tesla theme, and authentic PCHSS knowledge base integration.</p>
+            </div>
+          </div>
+
+          <div class="roadmap-item">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-content">
+              <span class="roadmap-phase">Phase 2 (Next Milestone)</span>
+              <h4>Multilingual Voice Assistant</h4>
+              <p>Voice-enabled AI interaction supporting Odia, Hindi, and English with natural speech synthesis for students.</p>
+            </div>
+          </div>
+
+          <div class="roadmap-item">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-content">
+              <span class="roadmap-phase">Phase 3</span>
+              <h4>Automated Smart Gate-Pass System</h4>
+              <p>Digital station-leaving application workflow with automated WhatsApp/SMS parent confirmation.</p>
+            </div>
+          </div>
+
+          <div class="roadmap-item">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-content">
+              <span class="roadmap-phase">Phase 4</span>
+              <h4>Biometric & RFID Attendance Integration</h4>
+              <p>IoT classroom sensors syncing student entry records with automated attendance tracking in MongoDB.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12: Conclusion & Q&A -->
+    <section class="slide" data-slide="12">
+      <div class="slide-content conclusion-slide">
+        <div class="badge-row">
+          <span class="badge badge-accent">Session Complete</span>
+          <span class="badge badge-neutral">Thank You</span>
+        </div>
+
+        <h2 class="conclusion-title">
+          Empowering Education with <span class="text-sky">Intelligence & Discipline</span>
+        </h2>
+
+        <p class="conclusion-subtitle">
+          CampusSaathi combines modern AI with the values, discipline, and academic excellence of Purnachandra Group of Institutions.
+        </p>
+
+        <div class="credits-card">
+          <div class="credits-header">
+            <h3>Project Presentation Team</h3>
+            <p>+2 First Year Students • Science, Commerce & Arts</p>
+          </div>
+          <div class="credits-details">
+            <div class="credit-col">
+              <strong>Institution:</strong> Purnachandra Higher Secondary School (PCHSS)
+            </div>
+            <div class="credit-col">
+              <strong>Location:</strong> Raghunathpur, Baripada, Mayurbhanj, Odisha
+            </div>
+            <div class="credit-col">
+              <strong>Academic Session:</strong> 2026–2027
+            </div>
+          </div>
+        </div>
+
+        <div class="action-btn-row">
+          <button class="btn btn-primary" id="btnRestart">
+            <span>↺ Restart Presentation</span>
+          </button>
+          <button class="btn btn-secondary" id="btnToggleFsConclusion">
+            <span>⛶ Toggle Full Screen</span>
+          </button>
+        </div>
+
+        <div class="qa-banner">
+          <h3>Questions & Discussion</h3>
+          <p>We welcome your valuable feedback, questions, and insights!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Slide Grid / Thumbnail Drawer Modal -->
+  <div class="grid-modal" id="gridModal">
+    <div class="grid-modal-backdrop" id="gridModalBackdrop"></div>
+    <div class="grid-modal-content">
+      <div class="grid-modal-header">
+        <h3>Presentation Slides (Overview)</h3>
+        <button class="btn-close" id="btnCloseGrid" title="Close Overview (Esc)">✕</button>
+      </div>
+      <div class="slide-grid-container" id="slideGridContainer">
+        <!-- Generated dynamically in script.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Floating Glass Control Bar -->
+  <footer class="controls-bar" id="controlsBar">
+    <div class="controls-left">
+      <button class="ctrl-btn" id="btnPrev" title="Previous Slide (← / PageUp)">
+        <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        <span class="btn-text">Back</span>
+      </button>
+
+      <div class="slide-indicator" id="slideIndicator" title="Click to view all slides">
+        <span id="currentSlideNum">1</span>
+        <span class="indicator-divider">/</span>
+        <span id="totalSlidesNum">12</span>
+      </div>
+
+      <button class="ctrl-btn ctrl-btn-primary" id="btnNext" title="Next Slide (→ / Space / PageDown)">
+        <span class="btn-text">Next</span>
+        <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="controls-center">
+      <div class="elapsed-timer" id="elapsedTimer" title="Presentation Timer">00:00</div>
+    </div>
+
+    <div class="controls-right">
+      <button class="ctrl-btn ctrl-icon-only" id="btnGrid" title="Slide Overview (G / O)">
+        <svg class="ctrl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="7" height="7" x="3" y="3" rx="1"/>
+          <rect width="7" height="7" x="14" y="3" rx="1"/>
+          <rect width="7" height="7" x="14" y="14" rx="1"/>
+          <rect width="7" height="7" x="3" y="14" rx="1"/>
+        </svg>
+      </button>
+
+      <button class="ctrl-btn ctrl-icon-only" id="btnThemeToggle" title="Toggle Theme (T)">
+        <svg class="ctrl-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg class="ctrl-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+
+      <button class="ctrl-btn ctrl-icon-only" id="btnFullscreen" title="Full Screen (F / Esc to Exit)">
+        <svg class="ctrl-icon icon-maximize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+        <svg class="ctrl-icon icon-minimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Floating Keyboard Hint Toast -->
+  <div class="kbd-hint" id="kbdHint">
+    <span>Tip: Use <kbd>→</kbd> / <kbd>Space</kbd> for Next, <kbd>←</kbd> for Back, <kbd>F</kbd> for Fullscreen, <kbd>Esc</kbd> to return</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="csBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="100%" stop-color="#BAE6FD" />
+    </linearGradient>
+    <linearGradient id="csSkyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded Squircle Badge Base -->
+  <rect width="512" height="512" rx="120" fill="url(#csBgGrad)" />
+
+  <!-- Shield Outer Crest Contour -->
+  <path d="M256 90 C330 90 395 130 395 240 C395 330 320 395 256 422 C192 395 117 330 117 240 C117 130 182 90 256 90 Z" 
+        fill="#0284C7" />
+  <path d="M256 106 C318 106 377 142 377 238 C377 318 310 376 256 402 C202 376 135 318 135 238 C135 142 194 106 256 106 Z" 
+        fill="#F0F9FF" />
+
+  <!-- Left Scholar Head & Mortarboard -->
+  <circle cx="180" cy="172" r="22" fill="#0369A1" />
+  <!-- Mortarboard Cap -->
+  <polygon points="180,126 210,138 180,150 150,138" fill="#0284C7" />
+  <path d="M150 144 L146 168" stroke="#0284C7" stroke-width="4" stroke-linecap="round" />
+  <!-- Left Scholar Body / Arm holding crest -->
+  <path d="M152 230 C152 198 170 188 196 198 L218 206 C206 226 190 248 182 278 L160 274 C154 256 152 242 152 230 Z" fill="#0284C7" />
+
+  <!-- Right Companion Head & Body -->
+  <circle cx="332" cy="172" r="22" fill="#0369A1" />
+  <!-- Right Companion Body / Arm holding crest -->
+  <path d="M360 230 C360 198 342 188 316 198 L294 206 C306 226 322 248 330 278 L352 274 C358 256 360 242 360 230 Z" fill="#0284C7" />
+
+  <!-- Center Friendly Speech Bubble -->
+  <path d="M256 200 C216 200 184 226 184 258 C184 278 198 296 220 306 L212 328 L238 316 C244 317 250 318 256 318 C296 318 328 292 328 258 C328 226 296 200 256 200 Z" 
+        fill="#0284C7" />
+  
+  <!-- Dialogue Dots Inside Speech Bubble -->
+  <circle cx="230" cy="258" r="7" fill="#FFFFFF" />
+  <circle cx="256" cy="258" r="7" fill="#FFFFFF" />
+  <circle cx="282" cy="258" r="7" fill="#FFFFFF" />
+</svg>
