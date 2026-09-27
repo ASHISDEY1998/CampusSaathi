@@ -1,14 +1,15 @@
 /**
  * CampusSaathi Presentation Interactive Controller
+ * Refined for Baignyanik Medha Anwesha Drive 2026
  * Features:
+ * - Robust Native & CSS Viewport Fullscreen (Guaranteed to work in any browser)
  * - Next / Back slide navigation with smooth transitions
- * - Fullscreen toggle with standard Fallbacks & Escape key support
  * - Dynamic Progress Bar & Slide Indicator
  * - Slide Overview / Thumbnail Drawer
  * - Dark & Light Mode Toggle
  * - Presenter Elapsed Stopwatch
  * - Touch Swipe gesture support on mobile
- * - Keyboard Shortcuts (Arrows, Space, PageUp/Down, F, Esc, G, T)
+ * - Comprehensive Keyboard Shortcuts (Arrows, Space, PageUp/Down, F, Esc, G, T)
  */
 
 (function () {
@@ -46,20 +47,20 @@
     totalSlidesNumEl.textContent = String(totalSlides);
   }
 
-  // Slide Titles for Grid
+  // Slide Titles for Grid Overview
   const slideTitles = [
-    "Cover: CampusSaathi AI Platform",
-    "Problem Statement & Motivation",
-    "High-Level 3-Tier Architecture",
-    "Production Technology Stack",
-    "Strict Role-Based Access (RBAC)",
-    "RAG AI Pipeline Flowchart",
-    "Student Portal Experience",
-    "Teacher & Staff Experience",
-    "Admin Portal & Directory CRUD",
-    "PCHSS Authentic Data Grounding",
-    "Future Innovation Roadmap",
-    "Conclusion & Team Credits"
+    "Welcome: Baignyanik Medha Anwesha 2026",
+    "Real Campus Challenges & Examples",
+    "3-Tier Architecture & API Definition",
+    "Tech Stack & Enterprise Security",
+    "Digital Keycards (RBAC), JWT & Routing",
+    "RAG AI Pipeline: Phase A & B Explained",
+    "Student Portal for All Scholars",
+    "Teacher Portal & Academic Tools",
+    "Admin Portal: Easy School Management",
+    "100% Authentic PCHSS Data Grounding",
+    "Roadmap: Smart Gatepass & RFID",
+    "Conclusion, Q&A & Mentorship Credits"
   ];
 
   /**
@@ -111,42 +112,108 @@
   }
 
   /**
-   * Fullscreen controller with multi-browser fallbacks
+   * Robust Fullscreen Controller:
+   * Combines Native Fullscreen API + Guaranteed CSS Viewport Fullscreen Mode.
    */
-  function toggleFullscreen() {
+  function isCurrentlyFullscreen() {
     const doc = document;
-    const docEl = document.documentElement;
-
-    const isFullscreen =
+    return !!(
       doc.fullscreenElement ||
       doc.webkitFullscreenElement ||
       doc.mozFullScreenElement ||
-      doc.msFullscreenElement;
+      doc.msFullscreenElement ||
+      doc.documentElement.classList.contains('fullscreen-mode')
+    );
+  }
 
-    if (!isFullscreen) {
-      // Enter Fullscreen
-      if (docEl.requestFullscreen) {
-        docEl.requestFullscreen().catch(err => console.warn(err));
-      } else if (docEl.webkitRequestFullscreen) {
-        docEl.webkitRequestFullscreen();
-      } else if (docEl.mozRequestFullScreen) {
-        docEl.mozRequestFullScreen();
-      } else if (docEl.msRequestFullscreen) {
-        docEl.msRequestFullscreen();
-      }
+  function enterFullscreen() {
+    const docEl = document.documentElement;
+
+    // 1. Try Native Fullscreen
+    if (docEl.requestFullscreen) {
+      docEl.requestFullscreen().catch(() => {
+        // Fallback to CSS viewport mode
+        docEl.classList.add('fullscreen-mode');
+        document.body.classList.add('fullscreen-mode');
+        updateFullscreenIcons();
+      });
+    } else if (docEl.webkitRequestFullscreen) {
+      docEl.webkitRequestFullscreen();
+    } else if (docEl.mozRequestFullScreen) {
+      docEl.mozRequestFullScreen();
+    } else if (docEl.msRequestFullscreen) {
+      docEl.msRequestFullscreen();
     } else {
-      // Exit Fullscreen
-      if (doc.exitFullscreen) {
-        doc.exitFullscreen().catch(err => console.warn(err));
-      } else if (doc.webkitExitFullscreen) {
-        doc.webkitExitFullscreen();
-      } else if (doc.mozCancelFullScreen) {
-        doc.mozCancelFullScreen();
-      } else if (doc.msExitFullscreen) {
-        doc.msExitFullscreen();
-      }
+      // Direct CSS mode fallback
+      docEl.classList.add('fullscreen-mode');
+      document.body.classList.add('fullscreen-mode');
+    }
+
+    // Always ensure CSS fullscreen mode is also applied as safety net
+    docEl.classList.add('fullscreen-mode');
+    document.body.classList.add('fullscreen-mode');
+    updateFullscreenIcons();
+  }
+
+  function exitFullscreen() {
+    const doc = document;
+
+    if (doc.exitFullscreen && doc.fullscreenElement) {
+      doc.exitFullscreen().catch(() => {});
+    } else if (doc.webkitExitFullscreen && doc.webkitFullscreenElement) {
+      doc.webkitExitFullscreen();
+    } else if (doc.mozCancelFullScreen && doc.mozFullScreenElement) {
+      doc.mozCancelFullScreen();
+    } else if (doc.msExitFullscreen && doc.msFullscreenElement) {
+      doc.msExitFullscreen();
+    }
+
+    // Remove CSS class fallback
+    doc.documentElement.classList.remove('fullscreen-mode');
+    document.body.classList.remove('fullscreen-mode');
+    updateFullscreenIcons();
+  }
+
+  function toggleFullscreen() {
+    if (isCurrentlyFullscreen()) {
+      exitFullscreen();
+    } else {
+      enterFullscreen();
     }
   }
+
+  function updateFullscreenIcons() {
+    const active = isCurrentlyFullscreen();
+    const maxIcons = document.querySelectorAll('.icon-maximize');
+    const minIcons = document.querySelectorAll('.icon-minimize');
+
+    maxIcons.forEach(icon => {
+      icon.style.display = active ? 'none' : 'block';
+    });
+    minIcons.forEach(icon => {
+      icon.style.display = active ? 'block' : 'none';
+    });
+
+    if (btnFullscreen) {
+      btnFullscreen.title = active ? 'Exit Full Screen (Esc)' : 'Full Screen (F / Esc to Exit)';
+    }
+  }
+
+  // Listen to browser native fullscreen change events
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.classList.remove('fullscreen-mode');
+      document.body.classList.remove('fullscreen-mode');
+    }
+    updateFullscreenIcons();
+  });
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (!document.webkitFullscreenElement) {
+      document.documentElement.classList.remove('fullscreen-mode');
+      document.body.classList.remove('fullscreen-mode');
+    }
+    updateFullscreenIcons();
+  });
 
   /**
    * Theme Switcher (Dark / Light)
@@ -232,7 +299,7 @@
    */
   document.addEventListener('keydown', (e) => {
     // If modal is open, Escape closes it
-    if (gridModal.classList.contains('open')) {
+    if (gridModal && gridModal.classList.contains('open')) {
       if (e.key === 'Escape') {
         closeGridModal();
         e.preventDefault();
@@ -279,7 +346,7 @@
       case 'G':
       case 'o':
       case 'O':
-        if (gridModal.classList.contains('open')) {
+        if (gridModal && gridModal.classList.contains('open')) {
           closeGridModal();
         } else {
           openGridModal();
@@ -294,10 +361,10 @@
         break;
 
       case 'Escape':
-        // If in fullscreen, document handles exit automatically;
-        // if modal is open, it closes.
-        if (gridModal.classList.contains('open')) {
-          closeGridModal();
+        // If in fullscreen or modal, escape restores normal window view
+        if (isCurrentlyFullscreen()) {
+          exitFullscreen();
+          e.preventDefault();
         }
         break;
 
@@ -362,6 +429,7 @@
     }, 800);
   }
 
-  // Initialize slide 0
+  // Initialize
+  updateFullscreenIcons();
   goToSlide(0);
 })();

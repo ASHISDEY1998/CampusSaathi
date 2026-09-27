@@ -1,6 +1,28 @@
-# CampusSaathi Project Presentation Deck (HTML/CSS/JS)
+# CampusSaathi Project Presentation Deck (HTML5 / CSS / JS)
+**Baignyanik Medha Anwesha Drive 2026**  
 **Purnachandra Group of Institutions • Purnachandra Higher Secondary School, Raghunathpur, Baripada**  
-*Presented by: +2 First Year Students (Science, Commerce & Arts)*
+*Presented by: +2 First Year Students (Science, Commerce & Arts)*  
+*Developed with Technical Guidance from Google DeepMind's Antigravity Advanced Agentic AI & Senior Industry Mentors*
+
+---
+
+## 🌟 Key Presentation Highlights for Non-Technical Judges
+
+1. **Welcoming Banner:** Specifically formatted for **BAIGNYANIK MEDHA ANWESHA DRIVE 2026**.
+2. **Plain-English Concept Explanations:**
+   - **RBAC (Role-Based Access Control):** The digital keycard system that ensures students only access classrooms and helpdesk, teachers access staff tools, and only the Principal has master administrative keys.
+   - **RAG (Retrieval-Augmented Generation):** The "Open-Book Exam" for AI. Instead of guessing from internet memory, the AI opens the verified PCHSS rulebook to answer with 100% truth and zero hallucinations.
+   - **API (Application Programming Interface):** The digital waiter in a restaurant that safely brings requested data from the database kitchen to your screen.
+   - **JWT (JSON Web Token):** The tamper-proof stamped wristband given at airport check-in that keeps you securely logged in.
+   - **Role Gateway Routing:** The smart elevator that only lets keycards access authorized floors.
+   - **Automated Smart Gatepass:** Eliminates paper applications for hostel students; parents verify via automated WhatsApp/SMS notifications before departure.
+   - **Wireless RFID Attendance:** Contactless microchip ID scanning that logs attendance in 0.1 seconds without interrupting class time.
+3. **Real-World Campus Grounding:**
+   - 22-point student rules undertaking (hostel line movement, 2-minute phone limit, Sunday 9 AM–5 PM visiting hours).
+   - 12-point faculty service norms.
+   - 6-day master timetable for Science, Commerce, and Arts with real faculty names.
+   - 2026–2027 academic milestone dates.
+4. **Simple, Elegant User Interface:** Distraction-free, high-contrast design without reference to commercial automotive brands.
 
 ---
 
@@ -11,19 +33,13 @@ This presentation is **100% standalone and portable**. It has zero build steps a
 ### Method 1: Direct File Open (Offline Ready)
 1. Navigate to this folder: `CampusSaathi/presentation/`
 2. Double-click **`index.html`** or right-click and choose **Open With > Google Chrome / Microsoft Edge / Safari / Brave**.
-3. The presentation will immediately launch in full HD resolution.
+3. The presentation will immediately launch.
 
 ### Method 2: Local HTTP Server (Optional)
-If you prefer running via a local server:
 ```bash
-# Using Python
 cd presentation
 python3 -m http.server 3333
 # Open in browser: http://localhost:3333
-```
-or with Node `npx serve`:
-```bash
-npx serve presentation
 ```
 
 ---
@@ -34,9 +50,9 @@ npx serve presentation
 | :--- | :--- |
 | **`→` (Right Arrow)** / **`Space`** / **`PageDown`** | **Next Slide** |
 | **`←` (Left Arrow)** / **`Backspace`** / **`PageUp`** | **Previous Slide** |
-| **`F`** | **Toggle Fullscreen Mode** (Fills entire screen/projector) |
-| **`Esc` (Escape)** | **Exit Fullscreen** / Close Slide Overview |
-| **`G`** or **`O`** | **Slide Overview (Grid View)** to jump to any slide |
+| **`F`** | **Toggle Fullscreen Mode** (Dual-mode: Native API + CSS Viewport fallback) |
+| **`Esc` (Escape)** | **Exit Fullscreen** / Close Slide Overview Drawer |
+| **`G`** or **`O`** | **Slide Overview (Grid View)** to preview and jump to any slide |
 | **`T`** | **Toggle Dark / Light Mode** |
 | **`Home`** | Jump to **First Slide** |
 | **`End`** | Jump to **Final Slide** |
@@ -44,30 +60,13 @@ npx serve presentation
 
 ---
 
-## 📋 Slide Outline (12 Slides)
-
-1. **Cover & Hero Slide**: CampusSaathi branding, +2 First Year Student credits, PCHSS Baripada identity.
-2. **The Challenge & Motivation**: Friction in hostel phone rules, notice fragmentation, doubt clearing delays.
-3. **High-Level 3-Tier Architecture**: Presentation layer, API & Gateway layer, and MongoDB Atlas + Gemini AI store.
-4. **Technology Stack**: Next.js 16, React 19, TypeScript, MongoDB Atlas, Google Gemini 2.5 Flash & text-embedding-001.
-5. **Authentication & Strict RBAC**: Bcrypt hash verification, JWT in HTTP-Only cookies, and ironclad role separation.
-6. **RAG AI Pipeline Flow**: How official Markdown rules & timetables are chunked, vectorized, and retrieved with zero hallucination.
-7. **Student Portal Experience**: Master timetable periods 1–8 with real teachers, academic exam schedules, attendance tracking, and helpdesk.
-8. **Teacher & Staff Portal**: Master routine, Sunday emergency duty chart alerts, doubt clearing diary.
-9. **Admin Portal & Management**: User directory CRUD, safe MongoDB cascade deletion, direct password reset, 1-click KB synchronizer.
-10. **Authentic Institutional Grounding**: Real 22-point student undertaking, 12-point faculty norms, full timetable, and 2026-27 calendar.
-11. **Future Innovation Roadmap**: Voice assistant in Odia/Hindi, automated smart gate-pass with WhatsApp parent notifications, RFID attendance.
-12. **Conclusion & Q&A**: Acknowledgments to Principal, Teachers, and Mentors; open floor for questions.
-
----
-
 ## 📁 File Structure
 
 ```
 presentation/
-├── index.html       # Single-page HTML presentation structure
-├── style.css        # Tesla-inspired styling (dark/light themes, animations, glassmorphism)
-├── script.js        # Keyboard shortcuts, fullscreen, timer, and slide logic
+├── index.html       # Single-page HTML presentation with 12 rich slides
+├── style.css        # Clean, high-contrast styling with dark/light themes & fullscreen support
+├── script.js        # Navigation controls, guaranteed fullscreen handler, timer & shortcuts
 ├── README.md        # Presentation guide & documentation
 └── assets/          # Logos & branding icons
     ├── campussaathi-logo.svg
